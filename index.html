@@ -30,18 +30,33 @@
         .scroll-prompt {
             margin-top: -4.5rem;
         }
-        .centered img {
+        .centered > img {
             width: 700px;
         }
         .arrow img {
             margin-top: 7rem;
             width: 120px;
         }
-        .project-link {
+        .project-card {
+            position: relative;
+            width: 750px;
+            max-width: 100%;
+            margin: 1rem auto 0;
+        }
+        .project-card img {
+            width: 750px;
             display: block;
+        }
+        .project-link {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 55%;
             text-align: center;
             font-size: 1.5rem;
-            margin-top: 2rem;
+            margin: 0;
+            color: inherit;
         }
     </style>
 </head>
@@ -56,7 +71,10 @@
     <div class="centered arrow">
         <img src="./home-media/arrow.png" alt="Scroll Down Arrow">
     </div>
-    <a class="project-link" href="./1/index.html">Project 0: Becoming Friends With Your Camera</a>
+    <div class="project-card">
+        <img src="./home-media/rounded-frame.gif" alt="Rounded frame">
+        <a class="project-link" href="./1/index.html">Project 0: Becoming Friends With Your Camera</a>
+    </div>
     
 </body>
 </html>
