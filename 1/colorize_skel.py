@@ -22,24 +22,35 @@ def ncc(a, b):
     bv = b.ravel() - b.mean()
     return np.dot(av / np.linalg.norm(av), bv / np.linalg.norm(bv))
 
-def align(moving, base, radius=15, metric='ncc'):
+def align(moving, base, radius=15, metric='ncc', center=(0, 0)):
     if metric == 'ncc':
         score = ncc
         better = (lambda s, b: s > b)
     else: 
         score = squared_diff
         better = (lambda s, b: s < b)
+    center_y, center_x = center
     base_crop = crop(base)
     best_score = None
-    best_offset = (0, 0)
-    for dy in range(-radius, radius + 1):
-        for dx in range(-radius, radius + 1):
+    best_offset = center
+    for dy in range(center_y -radius, center_y +radius + 1):
+        for dx in range(center_x - radius, center_x + radius + 1):
             moving_crop = crop(np.roll(moving, (dy, dx), axis=(0, 1)))
             s = score(moving_crop, base_crop)
             if best_score is None or better(s, best_score):
                 best_score = s
                 best_offset = (dy, dx)  
     return best_offset
+
+def downsample(im):
+    return cv.resize(im, None, fx=0.5, fy=0.5, interpolation=cv.INTER_AREA)
+
+def pyramid(moving, base, radius=15, metric='ncc', min_size=400):
+    if min(base.shape) < min_size:
+        return align(moving, base, radius, metric)
+    coarse = pyramid(downsample(moving), downsample(base), radius, metric, min_size)
+    guess = (coarse[0] * 2, coarse[1] * 2)
+    return align(moving, base, 2, metric, guess)
 
 def colorize(name, radius=15, metric='ncc', show=False):
   
@@ -66,8 +77,11 @@ def colorize(name, radius=15, metric='ncc', show=False):
 
     #ag = align(g, b, radius, metric)
     #ar = align(r, b, radius, metric)
-    g_off = align(g, b, radius, metric)
-    r_off = align(r, b, radius, metric)
+    #g_off = align=(g, b, radius, metric)
+    #r_off = align(r, b, radius, metric)
+    g_off = pyramid(g, b, radius, metric)
+    r_off = pyramid(r, b, radius, metric)
+    
     print(f'{name.split("/")[-1]:16s} [{metric}] G={g_off} R={r_off}', flush=True)
     ag = np.roll(g, g_off, axis=(0, 1))
     ar = np.roll(r, r_off, axis=(0, 1))
@@ -93,13 +107,26 @@ def colorize(name, radius=15, metric='ncc', show=False):
 
     # save the image
     #fname = './out_fname.jpg'
-    fname = 'media/' + name.split('/')[-1].split('.')[0] + '_colorized.jpg'
+    fname = 'media/' + name.split('/')[-1].split('.')[0] + '_pyramid.jpg'
     cv.imwrite(fname, out_bgr)
     
 if __name__ == '__main__':
-    for imname in ['./CS180_fa2026_proj1_data/cathedral.jpg', './CS180_fa2026_proj1_data/monastery.jpg', './CS180_fa2026_proj1_data/tobolsk.jpg']:
+    for imname in ['./CS180_fa2026_proj1_data/cathedral.jpg', 
+                   './CS180_fa2026_proj1_data/monastery.jpg', 
+                   './CS180_fa2026_proj1_data/tobolsk.jpg',
+                   './CS180_fa2026_proj1_data/church.tif',
+                   './CS180_fa2026_proj1_data/emir.tif',
+                   './CS180_fa2026_proj1_data/harvesters.tif',
+                   './CS180_fa2026_proj1_data/icon.tif',
+                   './CS180_fa2026_proj1_data/ilemselga.tif',
+                   './CS180_fa2026_proj1_data/melons.tif',
+                   './CS180_fa2026_proj1_data/religous_painting.tif',
+                   './CS180_fa2026_proj1_data/self_portrait.tif',
+                   './CS180_fa2026_proj1_data/siren.tif',
+                   './CS180_fa2026_proj1_data/three_generations.tif',
+                   './CS180_fa2026_proj1_data/wharf.tif']:
         colorize(imname, metric='ncc')
-        colorize(imname, metric='l2')
+        #colorize(imname, metric='l2')
         
 
 
