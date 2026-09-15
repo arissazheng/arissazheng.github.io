@@ -6,8 +6,9 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 
 # name of the input file
-imname = './1/CS180_fa2026_proj1_data/cathedral.jpg'
+#imname = './1/CS180_fa2026_proj1_data/cathedral.jpg'
 
+#cropping to remove image edges from scoring and returns middle 80% of rols/cols
 def crop(im, frac=0.1):
     dh = int(im.shape[0] * frac)
     dw = int(im.shape[1] * frac)
@@ -97,7 +98,8 @@ def colorize(name, radius=15, metric='ncc', show=False):
     
 if __name__ == '__main__':
     for imname in ['./CS180_fa2026_proj1_data/cathedral.jpg', './CS180_fa2026_proj1_data/monastery.jpg', './CS180_fa2026_proj1_data/tobolsk.jpg']:
-        colorize(imname)
+        colorize(imname, metric='ncc')
+        colorize(imname, metric='l2')
         
 
 

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project 1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cedarville Cursive', cursive;
+            margin: 20px;
+            background-image: url('/home-media/paper-texture.jpg');
+            background-repeat: repeat;
+        }
+        h1 {
+            text-align: center;
+            font-size: 4rem;
+            margin-bottom: 0.1rem;
+        }
+        figcaption,
+        a,
+        h2,
+        h3 {
+            font-family: 'Josefin Sans', sans-serif;
+        }
+        .subtitle {
+            font-family: 'Cedarville Cursive', cursive;
+            text-align: center;
+            font-size: 2.5rem;
+        }
+    
+        img {
+            max-width: 400px;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 800px;
+        }
+        figure {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .row figure {
+            margin: 0;
+            flex: 1;
+        }
+        .row img {
+            width: 100%;
+        }
+                table {
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-family: 'Josefin Sans', sans-serif;
+        }
+        th, td {
+            border: 1px solid #8a7f6d;
+            padding: 6px 14px;
+            text-align: left;
+        }
+        th[colspan] {
+            text-align: center;
+        }
+        caption {
+            caption-side: bottom;
+            font-family: 'Josefin Sans', sans-serif;
+            text-align: left;
+            font-style: italic;
+            padding-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Project 1: Images of the Russian Empire:</h1>
+    <h2 class="subtitle">Colorizing the Prokudin-Gorskii photo collection</h2>
+    <p><a href="../index.html">Back to home</a></p>
+
+    <h2>Part 1: Results of a single-scale alignment (using NCC/L2 norm metrics) on the low resolution images (JPEG files)</h2>
+    <h3>Before Alignment</h3>
+    <div class="row">
+        <figure>
+            <img src="./media/cathedral_before.jpg" alt="cathedral.jpg, channels stacked without alignment">
+            <figcaption>Cathedral.jpg lacked alignment with visible color fringing on the cathedral, clouds, and greenery and had mismatched bands at each of the image borders.</figcaption>
+        </figure>
+    </div>
+    <h3>After Alignment</h3>
+    <div class="row">
+        <figure>
+            <img src="./media/cathedral_colorized.jpg" alt="cathedral.jpg colorized">
+            <figcaption>cathedral.jpg colorized</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/monastery_colorized.jpg" alt="monastery.jpg colorized">
+            <figcaption>monastery.jpg colorized</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/tobolsk_colorized.jpg" alt="tobolsk.jpg colorized">
+            <figcaption>tobolsk.jpg colorized</figcaption>
+        </figure>
+    </div>
+        <table>
+        <caption>Displacement vectors, given as (dy, dx) in NumPy row/column order.</caption>
+        <tr>
+            <th rowspan="2">Image</th>
+            <th colspan="2">NCC</th>
+            <th colspan="2">L2</th>
+        </tr>
+        <tr>
+            <th>Green</th><th>Red</th>
+            <th>Green</th><th>Red</th>
+        </tr>
+        <tr>
+            <td>cathedral.jpg</td>
+            <td>(5, 2)</td><td>(12, 3)</td>
+            <td>(5, 2)</td><td>(12, 3)</td>
+        </tr>
+        <tr>
+            <td>monastery.jpg</td>
+            <td>(-3, 2)</td><td>(3, 2)</td>
+            <td>(-3, 2)</td><td>(3, 2)</td>
+        </tr>
+        <tr>
+            <td>tobolsk.jpg</td>
+            <td>(3, 3)</td><td>(6, 3)</td>
+            <td>(3, 3)</td><td>(6, 3)</td>
+        </tr>
+    </table>
+    
+</body>
