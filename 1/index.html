@@ -69,6 +69,22 @@
             font-style: italic;
             padding-top: 0.5rem;
         }
+        .diverge td {
+            background: rgba(180, 60, 40, 0.08);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+        }
+        .grid figure {
+            margin: 0;
+        }
+        .grid img {
+            width: 100%;
+            max-width: none;
+        }
     </style>
 </head>
 <body>
@@ -126,5 +142,121 @@
             <td>(3, 3)</td><td>(6, 3)</td>
         </tr>
     </table>
-    
+    <h2>Part 2: Results of a multi-scale pyramid alignment (using NCC/L2 norm metrics computed on RGB pixel values) on all of our example images.</h2>
+        <div class="grid">
+        <figure>
+            <img src="./media/cathedral_pyramid.jpg" alt="cathedral.jpg colorized">
+            <figcaption>cathedral.jpg</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/monastery_pyramid.jpg" alt="monastery.jpg colorized">
+            <figcaption>monastery.jpg</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/tobolsk_pyramid.jpg" alt="tobolsk.jpg colorized">
+            <figcaption>tobolsk.jpg</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/church_pyramid.jpg" alt="church.tif colorized">
+            <figcaption>church.tif</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/emir_pyramid.jpg" alt="emir.tif colorized">
+            <figcaption>emir.tif</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/harvesters_pyramid.jpg" alt="harvesters.tif colorized">
+            <figcaption>harvesters.tif</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/icon_pyramid.jpg" alt="icon.tif colorized">
+            <figcaption>icon.tif</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/ilemselga_pyramid.jpg" alt="ilemselga.tif colorized">
+            <figcaption>ilemselga.tif</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/melons_pyramid.jpg" alt="melons.tif colorized">
+            <figcaption>melons.tif</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/religous_painting_pyramid.jpg" alt="religous_painting.tif colorized">
+            <figcaption>religous_painting.tif</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/self_portrait_pyramid.jpg" alt="self_portrait.tif colorized">
+            <figcaption>self_portrait.tif</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/siren_pyramid.jpg" alt="siren.tif colorized">
+            <figcaption>siren.tif</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/three_generations_pyramid.jpg" alt="three_generations.tif colorized">
+            <figcaption>three_generations.tif</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/wharf_pyramid.jpg" alt="wharf.tif colorized">
+            <figcaption>wharf.tif</figcaption>
+        </figure>
+    </div>
+    <table>
+        <caption>Displacement vectors from the multi-scale pyramid, as (dy, dx) in NumPy row/column order. The two metrics agree on 12 of 14 images.</caption>
+        <tr>
+            <th rowspan="2">Image</th>
+            <th colspan="2">NCC</th>
+            <th colspan="2">L2</th>
+            <th rowspan="2">Notes</th>
+        </tr>
+        <tr><th>Green</th><th>Red</th><th>Green</th><th>Red</th></tr>
+        <tr><td>cathedral.jpg</td><td>(5, 2)</td><td>(12, 3)</td><td>(5, 2)</td><td>(12, 3)</td><td></td></tr>
+        <tr><td>monastery.jpg</td><td>(-3, 2)</td><td>(3, 2)</td><td>(-3, 2)</td><td>(3, 2)</td><td></td></tr>
+        <tr><td>tobolsk.jpg</td><td>(3, 3)</td><td>(6, 3)</td><td>(3, 3)</td><td>(6, 3)</td><td></td></tr>
+        <tr class="diverge"><td>church.tif</td><td>(25, 4)</td><td>(58, -4)</td><td>(25, 4)</td><td>(64, 267)</td><td>NCC correct; L2 diverges by 267px</td></tr>
+        <tr class="diverge"><td>emir.tif</td><td>(49, 24)</td><td>(142, -205)</td><td>(49, 24)</td><td>(103, 57)</td><td>NCC misaligned</td></tr>
+        <tr><td>harvesters.tif</td><td>(60, 17)</td><td>(124, 14)</td><td>(59, 16)</td><td>(124, 13)</td><td></td></tr>
+        <tr><td>icon.tif</td><td>(41, 17)</td><td>(89, 23)</td><td>(41, 17)</td><td>(90, 23)</td><td></td></tr>
+        <tr><td>ilemselga.tif</td><td>(40, 7)</td><td>(130, 11)</td><td>(39, 7)</td><td>(130, 11)</td><td></td></tr>
+        <tr><td>melons.tif</td><td>(82, 10)</td><td>(178, 13)</td><td>(82, 11)</td><td>(178, 13)</td><td></td></tr>
+        <tr><td>religous_painting.tif</td><td>(28, 3)</td><td>(68, 7)</td><td>(28, 3)</td><td>(68, 7)</td><td></td></tr>
+        <tr><td>self_portrait.tif</td><td>(79, 29)</td><td>(176, 37)</td><td>(79, 29)</td><td>(176, 37)</td><td></td></tr>
+        <tr><td>siren.tif</td><td>(49, -6)</td><td>(96, -25)</td><td>(49, -6)</td><td>(96, -25)</td><td></td></tr>
+        <tr><td>three_generations.tif</td><td>(53, 14)</td><td>(112, 11)</td><td>(53, 14)</td><td>(112, 11)</td><td></td></tr>
+        <tr><td>wharf.tif</td><td>(15, -7)</td><td>(83, -16)</td><td>(15, -7)</td><td>(83, -16)</td><td></td></tr>
+    </table>
+        <table>
+        <caption>Single-scale vs. multi-scale, on a full-size plate (3202 &times; 3634 per channel).</caption>
+        <tr>
+            <th>&nbsp;</th>
+            <th>Single-scale</th>
+            <th>Multi-scale pyramid</th>
+        </tr>
+        <tr>
+            <td>Candidates at full resolution</td>
+            <td>961 (31 &times; 31)</td>
+            <td>25 (5 &times; 5)</td>
+        </tr>
+        <tr>
+            <td>Total pixel comparisons</td>
+            <td>11.18 billion</td>
+            <td>0.43 billion</td>
+        </tr>
+        <tr>
+            <td>Search reach</td>
+            <td>&plusmn;15 px</td>
+            <td>&plusmn;240 px</td>
+        </tr>
+        <tr>
+            <td>Time per plate</td>
+            <td>~57 s (projected)</td>
+            <td>2.2 s (measured)</td>
+        </tr>
+    </table>
+    <table>
+        <caption>Measured runtime, all 14 images, single-threaded.</caption>
+        <tr><th>All 14 images</th><td>26.8 s</td></tr>
+        <tr><th>Average per image</th><td>1.9 s</td></tr>
+        <tr><th>Average per .tif</th><td>~2.2 s</td></tr>
+    </table>
 </body>
