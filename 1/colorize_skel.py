@@ -124,9 +124,9 @@ if __name__ == '__main__':
                    './CS180_fa2026_proj1_data/self_portrait.tif',
                    './CS180_fa2026_proj1_data/siren.tif',
                    './CS180_fa2026_proj1_data/three_generations.tif',
-                   './CS180_fa2026_proj1_data/wharf.tif']:
+                   './CS180_fa2026_proj1_data/wharf.tif',
+                   './CS180_fa2026_proj1_data/camel.jpg',
+                   './CS180_fa2026_proj1_data/interior.jpg',
+                   './CS180_fa2026_proj1_data/statue.jpg']:
+        colorize(imname, metric='l2')
         colorize(imname, metric='ncc')
-        #colorize(imname, metric='l2')
-        
-
-

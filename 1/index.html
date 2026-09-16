@@ -176,13 +176,14 @@
     <div class="prose">
         <p>For the multi-scale pyramid alignment, we represent the image at multiple scales, i.e. a factor of 2, for a faster search procedure from the coarsest to the largest image.</p>
 
-        <p>The failure modes for single-scale alignment are that firstly, the search is slow, since the JPGs are 341 &times; 390 = 132,990 pixels and the TIFs are 961 &times; 11.6 million = ~11 billion pixels. Additionally we would have to scale the search window past &plusmn;15 pixels since the TIFs are roughly 10&times; the size of the JPGs, so the average offset ranges between JPGs and TIFs also roughly differ by 10&times;. With the multi-scale pyramid, since we downscale by 0.5, the &plusmn;15 pixel range is able to handle the search. Then once we&rsquo;ve found the best offset, we use <code>guess = (coarse[0] * 2, coarse[1] * 2)</code> to multiply it by the amount we downscaled.</p>
+        <p>The failure modes for single-scale alignment are that firstly, the search is slow, since the JPGs are 341 &times; 390 = 132,990 pixels and the TIFs are 961 &times; 11.6 million = ~11 billion pixels, about 87x more. A single-scale search at that size means 961 potential offsets &times; 11.6 million = ~11 billion pixel comparisons per channel. Additionally we would have to scale the search window past &plusmn;15 pixels since the TIFs are roughly 10&times; the size of the JPGs, so the average offset ranges between JPGs and TIFs also roughly differ by 10&times;. With the multi-scale pyramid, since we downscale by 0.5, the &plusmn;15 pixel range is able to handle the search. Then once we&rsquo;ve found the best offset, we use <code>guess = (coarse[0] * 2, coarse[1] * 2)</code> to multiply it by the amount we downscaled.</p>
 
         <p>The multi-scale pyramid alignment design halves the image until a side is &lt; 400 pixels so that it&rsquo;s small enough for the &plusmn;15 pixel range search. Then scaling back up, at each level, we double the returned offset and run a &plusmn;2 pixel range search. We&rsquo;re able to minimize the cost (significantly less pixels searched) and increase the pixel headroom so that we can reach even beyond the largest offsets. Also, when downscaling the images by halves, we have to turn every 2 &times; 2 block of pixels into 1, so we average the four pixels using <code>cv.INTER_AREA</code>.</p>
 
         <p>After running each image on both the NCC and L2 metrics, we observe that 12/14 images gave the same (dy, dx) offset result, or within a pixel. However, for church.tif, using L2, there&rsquo;s a large dx gap of 267 pixels for red, whereas it&rsquo;s &minus;4 pixels when using NCC; NCC produces a better result here. Similarly for emir.tif, using NCC, there&rsquo;s a dx gap of &minus;205 pixels for red, whereas it&rsquo;s 57 pixels when using L2; L2 produces a better result here. However, emir.tif is the one image that is truly misaligned, whereas church.tif is aligned. Both metrics failed once on different images, so it&rsquo;s hard to say that one metric is better than the other.</p>
 
         <p>NCC is a good metric for when two channels are the same/similar image, uniformly brighter or dimmer. Subtracting the mean and dividing by the norm in NCC removes the brightness differences, leaving just the structure of the objects in the image. However, in the scenario of emir.tif, NCC can&rsquo;t fix how different materials respond to different colors. For example, the blue robe is super bright and needs the red channel to be brightened to match the blue channel, compared to the wall which needs the red channel to be dimmed. Since NCC doesn&rsquo;t account for these differences in brightness and tries to generally minimize error, the blue robe is still too dark, and the white wall is still too bright. Thus, even with the multi-scale pyramid alignment variation of search, it&rsquo;s still comparing two images that are both poorly aligned but will store one image as a &ldquo;better&rdquo;-scored alignment even if a channel is still off by ~200 pixels. This issue could be fixed if we tried to detect edges, which represent where a brightness changes, so it no longer matters whether a channel needs to be brightened or dimmed.</p>
+    <h3>Final Images After Multi-Scale Pyramid Alignment</h3>
     </div>
         <div class="grid">
         <figure>
@@ -300,4 +301,9 @@
         <tr><th>Average per image</th><td>1.9 s</td></tr>
         <tr><th>Average per .tif</th><td>~2.2 s</td></tr>
     </table>
+    <h3>Part 3: Results on Three Additional Images from the Prokudin-Gorskii Collection</h3>
+    <figure>
+        <img src="./CS180_fa2026_proj1_data/camel.jpg" alt="camel.jpg, grayscale">
+        <figcaption>camel.jpg, grayscale</figcaption>
+    </figure>
 </body>
