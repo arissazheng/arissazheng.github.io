@@ -130,3 +130,9 @@ if __name__ == '__main__':
                    './CS180_fa2026_proj1_data/statue.jpg']:
         colorize(imname, metric='l2')
         colorize(imname, metric='ncc')
+        
+MAXDIM = 900
+if max(out_bgr.shape[:2]) > MAXDIM:
+    s = MAXDIM / max(out_bgr.shape[:2])
+    out_bgr = cv.resize(out_bgr, None, fx=s, fy=s, interpolation=cv.INTER_AREA)
+cv.imwrite(fname, out_bgr, [cv.IMWRITE_JPEG_QUALITY, 85])
