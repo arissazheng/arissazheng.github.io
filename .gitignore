@@ -9,4 +9,5 @@ __pycache__/
 venv/
 .ipynb_checkpoints/
 
-.DS_Store
+.DS_Store1/colorize_skel.py
+1/colorize_skel.py
