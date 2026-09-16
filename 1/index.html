@@ -28,7 +28,6 @@
             text-align: center;
             font-size: 2.5rem;
         }
-    
         img {
             max-width: 400px;
         }
@@ -49,7 +48,7 @@
         .row img {
             width: 100%;
         }
-                table {
+        table {
             border-collapse: collapse;
             margin: 1rem 0;
             font-family: 'Josefin Sans', sans-serif;
@@ -99,23 +98,77 @@
             padding: 1px 4px;
             border-radius: 3px;
         }
+        .pairs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+            gap: 24px 32px;
+            max-width: 1200px;
+        }
         .pair {
             display: flex;
-            gap: 20px;
+            gap: 16px;
+            align-items: flex-start;
+            flex-wrap: nowrap;
+        }
+        .pair figure {
+            margin: 0;
+            min-width: 0;
+        }
+        .pair img {
+            max-width: none;
+            height: 240px;
+            width: auto;
+        }
+        .pair figcaption {
+            font-size: 0.85rem;
+        }
+        .table-row {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-top: 2.5rem;
+        }
+        .table-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .table-row table {
+            margin-top: 0;
+        }
+        .part1-row {
+            display: flex;
+            gap: 32px;
             align-items: flex-start;
             flex-wrap: wrap;
             margin-bottom: 2rem;
         }
-        .pair figure {
+        .part1-col h3:first-child {
+            margin-top: 0;
+        }
+                .plate {
             margin: 0;
         }
-        .pair img {
+        .single {
+            margin: 0;
+            width: 260px;
+        }
+        .plate img {
             max-width: none;
             height: 420px;
             width: auto;
         }
-        .pair figcaption {
-            max-width: 100%;
+        .single img {
+            width: 100%;
+            max-width: none;
+        }
+        .part1-after {
+            flex: 1;
+            min-width: 340px;
+        }
+        .part1-after .row {
+            max-width: none;
         }
     </style>
 </head>
@@ -123,7 +176,6 @@
     <h1>Project 1: Images of the Russian Empire:</h1>
     <h2 class="subtitle">Colorizing the Prokudin-Gorskii photo collection</h2>
     <p><a href="../index.html">Back to home</a></p>
-
     <h2>Part 1: Results of a single-scale alignment (using NCC/L2 norm metrics) on the low resolution images (JPEG files)</h2>
     <div class="prose">
         <p>The Prokudin-Gorskii glass plate images represent a grayscale image, with top to bottom representing the B (blue), G (green), R (red) color channels. We separate each color channel by slicing the grayscale image into thirds. Since the camera used for these original photographs took three sequential exposures, the three color channels are misaligned with small errors like a frame or camera shifting. Thus we see something like the &ldquo;Before Alignment&rdquo; cathedral.jpg image below, where there&rsquo;s visible color fringing as well as mismatched color bands at the image borders. Since alignment is relative, we only need to hold one channel (i.e. B) fixed while searching for the displacement from the other two channels so that we can translate the G &amp; R channels to remove such offsets.</p>
@@ -134,61 +186,44 @@
 
         <p>A crop is applied to only return the middle 80% of rows and columns and remove the image edges to return a view of the photograph so that the NCC and L2 metrics don&rsquo;t measure the image edges. Since the border bands have extreme values (looks close to black), the exhaustive search would end up aligning the border, not the images since they would dominate the scoring.</p>
     </div>
-    <h3>Grayscale Image</h3>
-    <div class="row">
-        <figure>
-            <img src="./media/cathedral_original.jpg" alt="cathedral.jpg, grayscale">
-            <figcaption>cathedral.jpg, grayscale</figcaption>
-        </figure>
+    <div class="part1-row">
+    <div class="part1-row">
+        <div class="part1-col">
+            <h3>Grayscale Image</h3>
+            <figure class="plate">
+                <img src="./media/cathedral_original.jpg" alt="cathedral.jpg, grayscale">
+                <figcaption>cathedral.jpg, grayscale</figcaption>
+            </figure>
+        </div>
+
+        <div class="part1-col">
+            <h3>Before Alignment</h3>
+            <figure class="single">
+                <img src="./media/cathedral_before.jpg" alt="cathedral.jpg, channels stacked without alignment">
+                <figcaption>cathedral.jpg lacked alignment with visible color fringing on the cathedral, clouds, and greenery and had mismatched bands at each of the image borders.</figcaption>
+            </figure>
+        </div>
+
+        <div class="part1-col part1-after">
+            <h3>After Alignment</h3>
+            <div class="row">
+                <figure>
+                    <img src="./media/cathedral_colorized.jpg" alt="cathedral.jpg colorized">
+                    <figcaption>cathedral.jpg colorized</figcaption>
+                </figure>
+                <figure>
+                    <img src="./media/monastery_colorized.jpg" alt="monastery.jpg colorized">
+                    <figcaption>monastery.jpg colorized</figcaption>
+                </figure>
+                <figure>
+                    <img src="./media/tobolsk_colorized.jpg" alt="tobolsk.jpg colorized">
+                    <figcaption>tobolsk.jpg colorized</figcaption>
+                </figure>
+            </div>
+        </div>
     </div>
-    <h3>Before Alignment</h3>
-    <div class="row">
-        <figure>
-            <img src="./media/cathedral_before.jpg" alt="cathedral.jpg, channels stacked without alignment">
-            <figcaption>cathedral.jpg lacked alignment with visible color fringing on the cathedral, clouds, and greenery and had mismatched bands at each of the image borders.</figcaption>
-        </figure>
     </div>
-    <h3>After Alignment</h3>
-    <div class="row">
-        <figure>
-            <img src="./media/cathedral_colorized.jpg" alt="cathedral.jpg colorized">
-            <figcaption>cathedral.jpg colorized</figcaption>
-        </figure>
-        <figure>
-            <img src="./media/monastery_colorized.jpg" alt="monastery.jpg colorized">
-            <figcaption>monastery.jpg colorized</figcaption>
-        </figure>
-        <figure>
-            <img src="./media/tobolsk_colorized.jpg" alt="tobolsk.jpg colorized">
-            <figcaption>tobolsk.jpg colorized</figcaption>
-        </figure>
     </div>
-        <table>
-        <caption>Displacement vectors, given as (dy, dx) in NumPy row/column order.</caption>
-        <tr>
-            <th rowspan="2">Image</th>
-            <th colspan="2">NCC</th>
-            <th colspan="2">L2</th>
-        </tr>
-        <tr>
-            <th>Green</th><th>Red</th>
-            <th>Green</th><th>Red</th>
-        </tr>
-        <tr>
-            <td>cathedral.jpg</td>
-            <td>(5, 2)</td><td>(12, 3)</td>
-            <td>(5, 2)</td><td>(12, 3)</td>
-        </tr>
-        <tr>
-            <td>monastery.jpg</td>
-            <td>(-3, 2)</td><td>(3, 2)</td>
-            <td>(-3, 2)</td><td>(3, 2)</td>
-        </tr>
-        <tr>
-            <td>tobolsk.jpg</td>
-            <td>(3, 3)</td><td>(6, 3)</td>
-            <td>(3, 3)</td><td>(6, 3)</td>
-        </tr>
     </table>
     <h2>Part 2: Results of a multi-scale pyramid alignment (using NCC/L2 norm metrics computed on RGB pixel values) on all of our example images.</h2>
     <div class="prose">
@@ -261,101 +296,107 @@
             <figcaption>wharf.tif</figcaption>
         </figure>
     </div>
-    <table>
-        <caption>Displacement vectors from the multi-scale pyramid, as (dy, dx) in NumPy row/column order. The two metrics agree on 12 of 14 images.</caption>
-        <tr>
-            <th rowspan="2">Image</th>
-            <th colspan="2">NCC</th>
-            <th colspan="2">L2</th>
-            <th rowspan="2">Notes</th>
-        </tr>
-        <tr><th>Green</th><th>Red</th><th>Green</th><th>Red</th></tr>
-        <tr><td>cathedral.jpg</td><td>(5, 2)</td><td>(12, 3)</td><td>(5, 2)</td><td>(12, 3)</td><td></td></tr>
-        <tr><td>monastery.jpg</td><td>(-3, 2)</td><td>(3, 2)</td><td>(-3, 2)</td><td>(3, 2)</td><td></td></tr>
-        <tr><td>tobolsk.jpg</td><td>(3, 3)</td><td>(6, 3)</td><td>(3, 3)</td><td>(6, 3)</td><td></td></tr>
-        <tr class="diverge"><td>church.tif</td><td>(25, 4)</td><td>(58, -4)</td><td>(25, 4)</td><td>(64, 267)</td><td>NCC correct; L2 diverges by 267px</td></tr>
-        <tr class="diverge"><td>emir.tif</td><td>(49, 24)</td><td>(142, -205)</td><td>(49, 24)</td><td>(103, 57)</td><td>NCC misaligned</td></tr>
-        <tr><td>harvesters.tif</td><td>(60, 17)</td><td>(124, 14)</td><td>(59, 16)</td><td>(124, 13)</td><td></td></tr>
-        <tr><td>icon.tif</td><td>(41, 17)</td><td>(89, 23)</td><td>(41, 17)</td><td>(90, 23)</td><td></td></tr>
-        <tr><td>ilemselga.tif</td><td>(40, 7)</td><td>(130, 11)</td><td>(39, 7)</td><td>(130, 11)</td><td></td></tr>
-        <tr><td>melons.tif</td><td>(82, 10)</td><td>(178, 13)</td><td>(82, 11)</td><td>(178, 13)</td><td></td></tr>
-        <tr><td>religous_painting.tif</td><td>(28, 3)</td><td>(68, 7)</td><td>(28, 3)</td><td>(68, 7)</td><td></td></tr>
-        <tr><td>self_portrait.tif</td><td>(79, 29)</td><td>(176, 37)</td><td>(79, 29)</td><td>(176, 37)</td><td></td></tr>
-        <tr><td>siren.tif</td><td>(49, -6)</td><td>(96, -25)</td><td>(49, -6)</td><td>(96, -25)</td><td></td></tr>
-        <tr><td>three_generations.tif</td><td>(53, 14)</td><td>(112, 11)</td><td>(53, 14)</td><td>(112, 11)</td><td></td></tr>
-        <tr><td>wharf.tif</td><td>(15, -7)</td><td>(83, -16)</td><td>(15, -7)</td><td>(83, -16)</td><td></td></tr>
-    </table>
+        <div class="table-row">
         <table>
-        <caption>Single-scale vs. multi-scale, on a full-size plate (3202 &times; 3634 per channel).</caption>
-        <tr>
-            <th>&nbsp;</th>
-            <th>Single-scale</th>
-            <th>Multi-scale pyramid</th>
-        </tr>
-        <tr>
-            <td>Candidates at full resolution</td>
-            <td>961 (31 &times; 31)</td>
-            <td>25 (5 &times; 5)</td>
-        </tr>
-        <tr>
-            <td>Total pixel comparisons</td>
-            <td>11.18 billion</td>
-            <td>0.43 billion</td>
-        </tr>
-        <tr>
-            <td>Search reach</td>
-            <td>&plusmn;15 px</td>
-            <td>&plusmn;240 px</td>
-        </tr>
-        <tr>
-            <td>Time per plate</td>
-            <td>~57 s (projected)</td>
-            <td>2.2 s (measured)</td>
-        </tr>
-    </table>
-    <table>
-        <caption>Measured runtime, all 14 images, single-threaded.</caption>
-        <tr><th>All 14 images</th><td>26.8 s</td></tr>
-        <tr><th>Average per image</th><td>1.9 s</td></tr>
-        <tr><th>Average per .tif</th><td>~2.2 s</td></tr>
-    </table>
+            <caption>Displacement vectors from the multi-scale pyramid, as (dy, dx) in NumPy row/column order. The two metrics agree on 12 of 14 images.</caption>
+            <tr>
+                <th rowspan="2">Image</th>
+                <th colspan="2">NCC</th>
+                <th colspan="2">L2</th>
+                <th rowspan="2">Notes</th>
+            </tr>
+            <tr><th>Green</th><th>Red</th><th>Green</th><th>Red</th></tr>
+            <tr><td>cathedral.jpg</td><td>(5, 2)</td><td>(12, 3)</td><td>(5, 2)</td><td>(12, 3)</td><td></td></tr>
+            <tr><td>monastery.jpg</td><td>(-3, 2)</td><td>(3, 2)</td><td>(-3, 2)</td><td>(3, 2)</td><td></td></tr>
+            <tr><td>tobolsk.jpg</td><td>(3, 3)</td><td>(6, 3)</td><td>(3, 3)</td><td>(6, 3)</td><td></td></tr>
+            <tr class="diverge"><td>church.tif</td><td>(25, 4)</td><td>(58, -4)</td><td>(25, 4)</td><td>(64, 267)</td><td>NCC correct; L2 diverges by 267px</td></tr>
+            <tr class="diverge"><td>emir.tif</td><td>(49, 24)</td><td>(142, -205)</td><td>(49, 24)</td><td>(103, 57)</td><td>NCC misaligned</td></tr>
+            <tr><td>harvesters.tif</td><td>(60, 17)</td><td>(124, 14)</td><td>(59, 16)</td><td>(124, 13)</td><td></td></tr>
+            <tr><td>icon.tif</td><td>(41, 17)</td><td>(89, 23)</td><td>(41, 17)</td><td>(90, 23)</td><td></td></tr>
+            <tr><td>ilemselga.tif</td><td>(40, 7)</td><td>(130, 11)</td><td>(39, 7)</td><td>(130, 11)</td><td></td></tr>
+            <tr><td>melons.tif</td><td>(82, 10)</td><td>(178, 13)</td><td>(82, 11)</td><td>(178, 13)</td><td></td></tr>
+            <tr><td>religous_painting.tif</td><td>(28, 3)</td><td>(68, 7)</td><td>(28, 3)</td><td>(68, 7)</td><td></td></tr>
+            <tr><td>self_portrait.tif</td><td>(79, 29)</td><td>(176, 37)</td><td>(79, 29)</td><td>(176, 37)</td><td></td></tr>
+            <tr><td>siren.tif</td><td>(49, -6)</td><td>(96, -25)</td><td>(49, -6)</td><td>(96, -25)</td><td></td></tr>
+            <tr><td>three_generations.tif</td><td>(53, 14)</td><td>(112, 11)</td><td>(53, 14)</td><td>(112, 11)</td><td></td></tr>
+            <tr><td>wharf.tif</td><td>(15, -7)</td><td>(83, -16)</td><td>(15, -7)</td><td>(83, -16)</td><td></td></tr>
+        </table>
+
+        <div class="table-stack">
+            <table>
+                <caption>Single-scale vs. multi-scale, on a full-size plate (3202 &times; 3634 per channel).</caption>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Single-scale</th>
+                    <th>Multi-scale pyramid</th>
+                </tr>
+                <tr>
+                    <td>Candidates at full resolution</td>
+                    <td>961 (31 &times; 31)</td>
+                    <td>25 (5 &times; 5)</td>
+                </tr>
+                <tr>
+                    <td>Total pixel comparisons</td>
+                    <td>11.18 billion</td>
+                    <td>0.43 billion</td>
+                </tr>
+                <tr>
+                    <td>Search reach</td>
+                    <td>&plusmn;15 px</td>
+                    <td>&plusmn;240 px</td>
+                </tr>
+                <tr>
+                    <td>Time per plate</td>
+                    <td>~57 s (projected)</td>
+                    <td>2.2 s (measured)</td>
+                </tr>
+            </table>
+
+            <table>
+                <caption>Measured runtime, all 14 images, single-threaded.</caption>
+                <tr><th>All 14 images</th><td>26.8 s</td></tr>
+                <tr><th>Average per image</th><td>1.9 s</td></tr>
+                <tr><th>Average per .tif</th><td>~2.2 s</td></tr>
+            </table>
+        </div>
+    </div>
     <h2>Part 3: Results on Three Additional Images from the Prokudin-Gorskii Collection</h2>
     <div class="prose">
         <p>The three additional images we tested on from the Prokudin-Gorskii collection are &ldquo;Vitebsk. Ikonostas v Uspenskom sobori︠e︡&rdquo; (interior.jpg), &ldquo;Ėtrusskīi︠a︡ vazy v Ėrmitazhi︠e︡ v SPeterburgi︠e︡&rdquo; (statue.jpg), and &ldquo;[Man with camel loaded with packs]&rdquo; (camel.jpg).</p>
 
         <p>interior.jpg is further evidence of L2 failure despite image alignment: the L2 red offset is exactly &minus;15 for dy, which is the boundary of the search window. Therefore, the search was still continuing to improve when it hit a stopping point.</p>
-    </div>
+        <h3>Grayscale vs colorized on additional images</h3>
+        <div class="pairs">
         <div class="pair">
-        <figure>
-            <img src="./media/camel_original.jpg" alt="camel.jpg glass plate scan, three stacked channels">
-            <figcaption>camel.jpg, original grayscale</figcaption>
-        </figure>
-        <figure>
-            <img src="./media/camel_pyramid.jpg" alt="camel.jpg colorized">
-            <figcaption>camel.jpg, colorized</figcaption>
-        </figure>
-    </div>
-
-    <div class="pair">
-    <figure>
-            <img src="./media/interior_original.jpg" alt="interior.jpg glass plate scan, three stacked channels">
-            <figcaption>interior.jpg, original grayscale</figcaption>
-        </figure>
-        <figure>
-            <img src="./media/interior_pyramid.jpg" alt="interior.jpg colorized">
-            <figcaption>interior.jpg, colorized</figcaption>
-        </figure>
-    </div>
-
-    <div class="pair">
-        <figure>
-            <img src="./media/statue_original.jpg" alt="statue.jpg glass plate scan, three stacked channels">
-            <figcaption>statue.jpg, original grayscale</figcaption>
-        </figure>
-        <figure>
-            <img src="./media/statue_pyramid.jpg" alt="statue.jpg colorized">
-            <figcaption>statue.jpg, colorized</figcaption>
-        </figure>
+            <figure>
+                <img src="./media/camel_original.jpg" alt="camel.jpg glass plate scan, three stacked channels">
+                <figcaption>camel.jpg, grayscale</figcaption>
+            </figure>
+            <figure>
+                <img src="./media/camel_pyramid.jpg" alt="camel.jpg colorized">
+                <figcaption>camel.jpg, colorized</figcaption>
+            </figure>
+        </div>
+        <div class="pair">
+            <figure>
+                <img src="./media/interior_original.jpg" alt="interior.jpg glass plate scan, three stacked channels">
+                <figcaption>interior.jpg, grayscale</figcaption>
+            </figure>
+            <figure>
+                <img src="./media/interior_pyramid.jpg" alt="interior.jpg colorized">
+                <figcaption>interior.jpg, colorized</figcaption>
+            </figure>
+        </div>
+        <div class="pair">
+            <figure>
+                <img src="./media/statue_original.jpg" alt="statue.jpg glass plate scan, three stacked channels">
+                <figcaption>statue.jpg, grayscale</figcaption>
+            </figure>
+            <figure>
+                <img src="./media/statue_pyramid.jpg" alt="statue.jpg colorized">
+                <figcaption>statue.jpg, colorized</figcaption>
+            </figure>
+        </div>
     </div>
     <table>
         <caption>Displacement vectors for the three images I selected, as (dy, dx).</caption>
