@@ -99,6 +99,24 @@
             padding: 1px 4px;
             border-radius: 3px;
         }
+        .pair {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        .pair figure {
+            margin: 0;
+        }
+        .pair img {
+            max-width: none;
+            height: 420px;
+            width: auto;
+        }
+        .pair figcaption {
+            max-width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -119,7 +137,7 @@
     <h3>Grayscale Image</h3>
     <div class="row">
         <figure>
-            <img src="./CS180_fa2026_proj1_data/cathedral.jpg" alt="cathedral.jpg, grayscale">
+            <img src="./media/cathedral_original.jpg" alt="cathedral.jpg, grayscale">
             <figcaption>cathedral.jpg, grayscale</figcaption>
         </figure>
     </div>
@@ -301,9 +319,55 @@
         <tr><th>Average per image</th><td>1.9 s</td></tr>
         <tr><th>Average per .tif</th><td>~2.2 s</td></tr>
     </table>
-    <h3>Part 3: Results on Three Additional Images from the Prokudin-Gorskii Collection</h3>
+    <h2>Part 3: Results on Three Additional Images from the Prokudin-Gorskii Collection</h2>
+    <div class="prose">
+        <p>The three additional images we tested on from the Prokudin-Gorskii collection are &ldquo;Vitebsk. Ikonostas v Uspenskom sobori︠e︡&rdquo; (interior.jpg), &ldquo;Ėtrusskīi︠a︡ vazy v Ėrmitazhi︠e︡ v SPeterburgi︠e︡&rdquo; (statue.jpg), and &ldquo;[Man with camel loaded with packs]&rdquo; (camel.jpg).</p>
+
+        <p>interior.jpg is further evidence of L2 failure despite image alignment: the L2 red offset is exactly &minus;15 for dy, which is the boundary of the search window. Therefore, the search was still continuing to improve when it hit a stopping point.</p>
+    </div>
+        <div class="pair">
+        <figure>
+            <img src="./media/camel_original.jpg" alt="camel.jpg glass plate scan, three stacked channels">
+            <figcaption>camel.jpg, original grayscale</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/camel_pyramid.jpg" alt="camel.jpg colorized">
+            <figcaption>camel.jpg, colorized</figcaption>
+        </figure>
+    </div>
+
+    <div class="pair">
     <figure>
-        <img src="./CS180_fa2026_proj1_data/camel.jpg" alt="camel.jpg, grayscale">
-        <figcaption>camel.jpg, grayscale</figcaption>
-    </figure>
+            <img src="./media/interior_original.jpg" alt="interior.jpg glass plate scan, three stacked channels">
+            <figcaption>interior.jpg, original grayscale</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/interior_pyramid.jpg" alt="interior.jpg colorized">
+            <figcaption>interior.jpg, colorized</figcaption>
+        </figure>
+    </div>
+
+    <div class="pair">
+        <figure>
+            <img src="./media/statue_original.jpg" alt="statue.jpg glass plate scan, three stacked channels">
+            <figcaption>statue.jpg, original grayscale</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/statue_pyramid.jpg" alt="statue.jpg colorized">
+            <figcaption>statue.jpg, colorized</figcaption>
+        </figure>
+    </div>
+    <table>
+        <caption>Displacement vectors for the three images I selected, as (dy, dx).</caption>
+        <tr>
+            <th rowspan="2">Image</th>
+            <th colspan="2">NCC</th>
+            <th colspan="2">L2</th>
+            <th rowspan="2">Notes</th>
+        </tr>
+        <tr><th>Green</th><th>Red</th><th>Green</th><th>Red</th></tr>
+        <tr><td>camel.jpg</td><td>(2, 2)</td><td>(8, 4)</td><td>(2, 2)</td><td>(8, 4)</td><td></td></tr>
+        <tr class="diverge"><td>interior.jpg</td><td>(5, 0)</td><td>(11, -1)</td><td>(5, 0)</td><td>(-15, -1)</td><td>NCC correct; L2 pinned at the &plusmn;15 boundary</td></tr>
+        <tr><td>statue.jpg</td><td>(2, 3)</td><td>(11, 6)</td><td>(2, 3)</td><td>(11, 6)</td><td></td></tr>
+    </table>
 </body>
