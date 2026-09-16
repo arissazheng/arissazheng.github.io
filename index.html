@@ -47,16 +47,26 @@
             width: 750px;
             display: block;
         }
-        .project-link {
+        .project-links {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 55%;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .project-links a {
             font-size: 1.5rem;
-            margin: 0;
             color: inherit;
+        }
+
+        .project-links a strong {
+            font-weight: normal;
+            font-size: 1.15em;
+            letter-spacing: 0.02em;
         }
     </style>
 </head>
@@ -69,12 +79,14 @@
     </div>
     <h2 class="scroll-prompt">Scroll For Work</h2>
     <div class="centered arrow">
-        <img src="./home-media/arrow.png" alt="Scroll Down Arrow">
+        <img src="./home-media/arrow.png" alt="Scroll Down Arrow">`
     </div>
     <div class="project-card">
         <img src="./home-media/rounded-frame.gif" alt="Rounded frame">
-        <a class="project-link" href="./0/index.html">Project 0: Becoming Friends With Your Camera</a>
-        <a class="project-link" href="./1/index.html">Project 1: Images of the Russian Empire: Colorizing the Prokudin-Gorskii Photo Collection</a>
+        <div class="project-links">
+            <a href="./0/index.html"><strong>Project 0</strong>: Becoming Friends With Your Camera</a>
+            <a href="./1/index.html"><strong>Project 1</strong>: Colorizing the Prokudin-Gorskii Photo Collection</a>
+        </div>
     </div>
     
 </body>
