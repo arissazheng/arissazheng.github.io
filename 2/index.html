@@ -18,8 +18,72 @@
             margin-bottom: 0.1rem;
         }
         h2,
-        h3 {
+        h3,
+        figcaption,
+        p {
             font-family: 'Josefin Sans', sans-serif;
+        }
+        img {
+            max-width: 400px;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1200px;
+        }
+        figure {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .row figure {
+            margin: 0;
+            flex: 1;
+            min-width: 200px;
+        }
+        .row img {
+            width: 100%;
+        }
+        td code {
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 0.9em;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 1rem 0 1.5rem 0;
+            font-family: 'Josefin Sans', sans-serif;
+        }
+        th, td {
+            border: 1px solid #8a7f6d;
+            padding: 6px 14px;
+            text-align: left;
+        }
+        caption {
+            caption-side: bottom;
+            font-family: 'Josefin Sans', sans-serif;
+            text-align: left;
+            font-style: italic;
+            padding-top: 0.5rem;
+            max-width: 700px;
+        }
+        h4 {
+            font-family: 'Josefin Sans', sans-serif;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+        pre {
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 0.85rem;
+            max-width: 900px;
+            line-height: 1.45;
+        }
+        .table-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+        .table-row table {
+            margin-top: 1rem;
         }
     </style>
 </head>
@@ -27,6 +91,126 @@
     <h1>Project 2: Fun With Filters and Frequencies</h1>
     <h2>Part 1: Fun With Filters</h2>
     <h3>Part 1.1: Convolutions From Scratch!</h3>
+    <p> A convolution creates a new image by applying a kernel (matrix with varying weights and corresponding effects) to the original image. The kernel is applied to each pixel in the original image after getting flipped along the x and y axes, then getting multiplied and summed with the surrounding pixels to produce an output pixel. Examples of kernel effects include a matrix with equal weights (blurring effect) and a finite difference kernel (which uses subtraction to detect edges).</p>
+
+    <h4>Zero padding</h4>
+    <pre><code>def padding(im, kh, kw):
+    top = kh // 2
+    bottom = (kh - 1) // 2
+    left = kw // 2
+    right = (kw - 1) // 2
+    H, W = im.shape
+    padded = np.zeros((H + top + bottom, W + left + right), dtype=np.float64)
+    padded[top:top + H, left:left + W] = im
+    return padded</code></pre>
+
+    <h4>Four-loop convolution</h4>
+    <pre><code>def convolution_four(im, kernel):
+    kh, kw = kernel.shape
+    k = kernel[::-1, ::-1]  # flip the kernel
+    padded = padding(im, kh, kw)
+    H, W = im.shape
+    out = np.zeros((H, W), dtype=np.float64)
+    for i in range(H):
+        for j in range(W):
+            total = 0.0
+            for m in range(kh):
+                for n in range(kw):
+                    total += padded[i + m, j + n] * k[m, n]
+            out[i, j] = total
+    return out</code></pre>
+
+    <h4>Two-loop convolution</h4>
+    <pre><code>def convolution_two(im, kernel):
+    kh, kw = kernel.shape
+    k = kernel[::-1, ::-1]
+    padded = padding(im, kh, kw)
+    H, W = im.shape
+    out = np.zeros((H, W), dtype=np.float64)
+    for i in range(H):
+        for j in range(W):
+            out[i, j] = np.sum(padded[i:i + kh, j:j + kw] * k)
+    return out</code></pre>
+
+    <h4>Kernels</h4>
+    <pre><code>box = np.ones((9, 9)) / 81.0
+Dx = np.array([[1, -1]], dtype=np.float64)
+Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
+
+    <div class="table-row">
+    <table>
+        <tr>
+            <th>Implementation</th>
+            <th>Runtime (9x9 box)</th>
+            <th>Relative to SciPy</th>
+        </tr>
+        <tr>
+            <td>Four loops</td>
+            <td>5.397 s</td>
+            <td>~151x slower</td>
+        </tr>
+        <tr>
+            <td>Two loops + NumPy</td>
+            <td>0.716 s</td>
+            <td>~20x slower</td>
+        </tr>
+        <tr>
+            <td><code>scipy.signal.convolve2d</code></td>
+            <td>0.036 s</td>
+            <td>1x (baseline)</td>
+        </tr>
+        <caption>
+            Runtime on a 375 x 500 grayscale image with a 9x9 box filter.
+        </caption>
+    </table>
+    <table>
+        <tr>
+            <th>Kernel</th>
+            <th>Four loops vs SciPy</th>
+            <th>Two loops vs SciPy</th>
+        </tr>
+        <tr>
+            <td>9x9 box</td>
+            <td>8.88e-16</td>
+            <td>8.88e-16</td>
+        </tr>
+        <tr>
+            <td>Dx = [1, -1]</td>
+            <td>0.0</td>
+            <td>0.0</td>
+        </tr>
+        <tr>
+            <td>Dy = [1, -1]<sup>T</sup></td>
+            <td>0.0</td>
+            <td>0.0</td>
+        </tr>
+        <caption>
+            Pixel difference between four loops and two loops vs. SciPy.
+        </caption>
+    </table>
+    </div>
+    <div class="row">
+        <figure>
+            <img src="./media/part1-1.JPG" alt="Original selfie">
+            <figcaption>Original selfie</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/part1-1-gray.jpg" alt="Grayscale selfie">
+            <figcaption>Grayscale selfie</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/part1-1-box.jpg" alt="9x9 box filter blur">
+            <figcaption>9x9 box filter</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/part1-1-dx.jpg" alt="Partial derivative in x">
+            <figcaption>Finite Difference Operator Dx</figcaption>
+        </figure>
+        <figure>
+            <img src="./media/part1-1-dy.jpg" alt="Partial derivative in y">
+            <figcaption>Finite Difference Operator Dy</figcaption>
+        </figure>
+    </div>
     <h3>Part 1.2: Finite Difference Operator</h3>
     <h3>Part 1.3: Derivative of Gaussian (DoG) Filter</h3>
     <h2>Part 2: Fun with Frequencies!</h2>
