@@ -20,7 +20,8 @@
         h2,
         h3,
         figcaption,
-        p {
+        p,
+        a {
             font-family: 'Josefin Sans', sans-serif;
         }
         img {
@@ -50,7 +51,7 @@
         }
         table {
             border-collapse: collapse;
-            margin: 1rem 0 1.5rem 0;
+            margin: 1rem 0 0.5rem 0;
             font-family: 'Josefin Sans', sans-serif;
         }
         th, td {
@@ -84,11 +85,16 @@
         }
         .table-row table {
             margin-top: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        .table-row + p {
+            margin-top: 0.5rem;
         }
     </style>
 </head>
 <body>
     <h1>Project 2: Fun With Filters and Frequencies</h1>
+    <p><a href="../index.html">Back to home</a></p>
     <h2>Part 1: Fun With Filters</h2>
     <h3>Part 1.1: Convolutions From Scratch!</h3>
     <p> A convolution creates a new image by applying a kernel (matrix with varying weights and corresponding effects) to the original image. The kernel is applied to each pixel in the original image after getting flipped along the x and y axes, then getting multiplied and summed with the surrounding pixels to produce an output pixel. Examples of kernel effects include a matrix with equal weights (blurring effect) and a finite difference kernel (which uses subtraction to detect edges).</p>
@@ -131,6 +137,9 @@
         for j in range(W):
             out[i, j] = np.sum(padded[i:i + kh, j:j + kw] * k)
     return out</code></pre>
+
+    <h4>SciPy convolution</h4>
+    <pre><code>scipy_result = scipy.signal.convolve2d(im, k, mode="same", boundary="fill", fillvalue=0)</code></pre>
 
     <h4>Kernels</h4>
     <pre><code>box = np.ones((9, 9)) / 81.0
@@ -189,6 +198,9 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
         </caption>
     </table>
     </div>
+    <p>
+        All implementations, <code>convolution_four</code>, <code>convolution_two</code>, and <code>scipy.signal.convolve2d</code>, use the same boundary rule of zero padding. With convolutions, every kernel weight is multiplied with a pixel from the original image. However, at the border, the kernel will stick out, and thus, missing pixels are treated as and padded with zeros so that the output and input images are the same sizes. In the presented implementations, <code>convolution_four</code> and <code>convolution_two</code> use np.zeros to create the padding, whereas SciPy uses <code>scipy.signal.convolve2d(im, k, mode="same", boundary="fill", fillvalue=0)</code>
+    </p>
     <div class="row">
         <figure>
             <img src="./media/part1-1.JPG" alt="Original selfie">
@@ -212,10 +224,56 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
         </figure>
     </div>
     <h3>Part 1.2: Finite Difference Operator</h3>
+    <p> To find edges in the cameraman image, I convolved it with finite difference operators Dx using scipy.signal.convolve2d. This creates output pixels which represent the difference between a pixel in the original image and its neighbor. Thus, if the two values are the same, the difference is zero in a flat area, and the difference is larger when there is a greater change in value, representing an edge. Since Dx measures from left to right, it creates vertical edges; similarly, since Dy measures from top to bottom, it creates horizontal edges. <code>boundary="symm"</code> was used to handle borders instead of zero padding since zero padding would create a false edge at the border.</p>
+    <div class="row">
+      <figure>
+        <img src="./media/part1-2-dx.jpg" alt="partial derivative in x">
+        <figcaption>dI/dx (vertical edges)</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/part1-2-dy.jpg" alt="partial derivative in y">
+        <figcaption>dI/dy (horizontal edges)</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/part1-2-gradient-magnitude.jpg" alt="gradient magnitude">
+        <figcaption>Gradient magnitude</figcaption>
+      </figure>
+    </div>
+    <p> The gradient magnitude combines derivatives Dx and Dy to analyze edge strength in any direction: <code>sqrt(dx&sup2; + dy&sup2;)</code>. In the gradient magnitude output image, edges are represented by bright white pixels, whereas flatter areas are represented in dark pixels. To create a binary edge image, each pixel above a tested gradient magnitude threshold is treated as an edge. Below show the results of testing thresholds from 0.05 to 0.3.</p>
+    
+    <h3>Choosing the threshold</h3>
+    
+    <div class="row">
+      <figure>
+        <img src="./media/part1-2-edges-0.05.jpg" alt="threshold 0.05">
+        <figcaption>0.05</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/part1-2-edges-0.1.jpg" alt="threshold 0.1">
+        <figcaption>0.1</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/part1-2-edges-0.15.jpg" alt="threshold 0.15">
+        <figcaption>0.15</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/part1-2-edges-0.3.jpg" alt="threshold 0.3">
+        <figcaption>0.3</figcaption>
+      </figure>
+    </div>
+    
+    <figure class="featured">
+      <img src="./media/part1-2-edges-0.2.jpg" alt="final edge image, threshold 0.2">
+      <figcaption><b>Final edge image, threshold = 0.2</b></figcaption>
+    </figure>
+    
+    <p> In the tested thresholds from 0.05 to 0.3, 0.2 was the best compromise, where the outline of the man's jacket and face, camera, tripod, and some of the skyline are visible, while minimal noise is shown in the grass and sky. Meanwhile, the 0.05, 0.1, and 0.15 images show heavier noise in the grass; 0.3 retains minimal background details; and 0.05 creates less visibility around the man's face and the camera.</p>
+    
     <h3>Part 1.3: Derivative of Gaussian (DoG) Filter</h3>
     <h2>Part 2: Fun with Frequencies!</h2>
     <h3>Part 2.1: Image "Sharpening"</h3>
     <h3>Part 2.2: Hybrid Images</h3>
     <h3>Part 2.3: Gaussian and Laplacian Stacks</h3>
     <h3>Part 2.4: Multiresolution Blending (a.k.a. the oraple!)</h3>
+    
 </body>
