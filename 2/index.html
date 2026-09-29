@@ -404,6 +404,178 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
     </div>
     <h2>Part 2: Fun with Frequencies!</h2>
     <h3>Part 2.1: Image "Sharpening"</h3>
+    <p>Gaussian blurs are low-pass filters that only keep the low frequencies of an image, creating a blurred effect. Therefore, if we subtract the low frequencies from an original sharp image, we are left with the high frequencies, which include edges and details. An unsharp mask helps take a blurry image and adds back the high frequencies to create a sharpened look. In the sample images below, you can see the original Taj Mahal image, along with various versions of it (with low frequencies only, high frequencies only, and varying levels of sharpening with the unsharp mask).</p>
+
+    <h4>Taj Mahal</h4>
+    <div class="row">
+      <figure>
+        <img src="./media/taj-original.jpg" alt="Taj Mahal original">
+        <figcaption>Original</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/taj-blurred.jpg" alt="Taj Mahal blurred">
+        <figcaption>Blurred</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/taj-high-f.jpg" alt="Taj Mahal high frequencies">
+        <figcaption>High frequencies</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/taj-sharpened.jpg" alt="Taj Mahal sharpened">
+        <figcaption>Sharpened (&alpha; = 1)</figcaption>
+      </figure>
+    </div>
+
+    <h4>Varying the sharpening amount &alpha;</h4>
+    <div class="row">
+      <figure>
+        <img src="./media/taj-sharpened-alpha-0.5.jpg" alt="alpha 0.5">
+        <figcaption>&alpha; = 0.5</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/taj-sharpened-alpha-1.jpg" alt="alpha 1">
+        <figcaption>&alpha; = 1</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/taj-sharpened-alpha-2.jpg" alt="alpha 2">
+        <figcaption>&alpha; = 2</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/taj-sharpened-alpha-5.jpg" alt="alpha 5">
+        <figcaption>&alpha; = 5</figcaption>
+      </figure>
+    </div>
+    <p>For the Taj Mahal image, the best sharpening factor is &alpha; = 1, where fine details like the outlines of bricks on the dome, tourists, and grass are clearly visible, yet noise is relatively low. In contrast, at &alpha; = 0.5, noise is still low but some details are still a bit fuzzy, such as the intricate carvings and brick outlines on the Taj Mahal. At &alpha; = 2 and 5, the noise greatly increases in the sky and on the building, making the image look unrealistically crisp with heavy edges.</p>
+    <p>In the experiments below, similarly, &alpha; = 1 is the best balance between noise and detail. For the tested images, when using a sharpening factor greater than &alpha; = 1, noise in large background areas such as the sky tend to increase greatly along with overly crisp details. For &alpha; = 0.5, noise is low, but some details are still fuzzy.</p>
+    <h4>Girl</h4>
+    <div class="row">
+      <figure>
+        <img src="./media/girl-blurry-original.jpg" alt="girl original">
+        <figcaption>Original</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/girl-blurry-blurred.jpg" alt="girl blurred">
+        <figcaption>Blurred</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/girl-blurry-high-f.jpg" alt="girl high frequencies">
+        <figcaption>High frequencies</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/girl-blurry-sharpened.jpg" alt="girl sharpened">
+        <figcaption>Sharpened (&alpha; = 1)</figcaption>
+      </figure>
+    </div>
+    <div class="row">
+      <figure>
+        <img src="./media/girl-blurry-sharpened-alpha-0.5.jpg" alt="girl alpha 0.5">
+        <figcaption>&alpha; = 0.5</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/girl-blurry-sharpened-alpha-1.jpg" alt="girl alpha 1">
+        <figcaption>&alpha; = 1</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/girl-blurry-sharpened-alpha-2.jpg" alt="girl alpha 2">
+        <figcaption>&alpha; = 2</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/girl-blurry-sharpened-alpha-5.jpg" alt="girl alpha 5">
+        <figcaption>&alpha; = 5</figcaption>
+      </figure>
+    </div>
+    <h4>Swans</h4>
+    <div class="row">
+      <figure>
+        <img src="./media/swans-blurry-original.jpg" alt="swans original">
+        <figcaption>Original</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/swans-blurry-blurred.jpg" alt="swans blurred">
+        <figcaption>Blurred</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/swans-blurry-high-f.jpg" alt="swans high frequencies">
+        <figcaption>High frequencies</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/swans-blurry-sharpened.jpg" alt="swans sharpened">
+        <figcaption>Sharpened (&alpha; = 1)</figcaption>
+      </figure>
+    </div>
+    <div class="row">
+      <figure>
+        <img src="./media/swans-blurry-sharpened-alpha-0.5.jpg" alt="swans alpha 0.5">
+        <figcaption>&alpha; = 0.5</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/swans-blurry-sharpened-alpha-1.jpg" alt="swans alpha 1">
+        <figcaption>&alpha; = 1</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/swans-blurry-sharpened-alpha-2.jpg" alt="swans alpha 2">
+        <figcaption>&alpha; = 2</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/swans-blurry-sharpened-alpha-5.jpg" alt="swans alpha 5">
+        <figcaption>&alpha; = 5</figcaption>
+      </figure>
+    </div>
+
+    <h4>Flowers</h4>
+    <div class="row">
+      <figure>
+        <img src="./media/flowers-blurry-original.jpg" alt="flowers original">
+        <figcaption>Original</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/flowers-blurry-blurred.jpg" alt="flowers blurred">
+        <figcaption>Blurred</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/flowers-blurry-high-f.jpg" alt="flowers high frequencies">
+        <figcaption>High frequencies</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/flowers-blurry-sharpened.jpg" alt="flowers sharpened">
+        <figcaption>Sharpened (&alpha; = 1)</figcaption>
+      </figure>
+    </div>
+    <div class="row">
+      <figure>
+        <img src="./media/flowers-blurry-sharpened-alpha-0.5.jpg" alt="flowers alpha 0.5">
+        <figcaption>&alpha; = 0.5</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/flowers-blurry-sharpened-alpha-1.jpg" alt="flowers alpha 1">
+        <figcaption>&alpha; = 1</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/flowers-blurry-sharpened-alpha-2.jpg" alt="flowers alpha 2">
+        <figcaption>&alpha; = 2</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/flowers-blurry-sharpened-alpha-5.jpg" alt="flowers alpha 5">
+        <figcaption>&alpha; = 5</figcaption>
+      </figure>
+    </div>
+
+    <h4>Evaluation: blurring a sharp image and sharpening it again</h4>
+    <div class="row">
+      <figure>
+        <img src="./media/cat-sharp-original.jpg" alt="cat original">
+        <figcaption>Original (sharp)</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/cat-sharp-blurred.jpg" alt="cat blurred">
+        <figcaption>Blurred (&sigma; = 2)</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/cat-sharp-resharpened.jpg" alt="cat resharpened">
+        <figcaption>Resharpened(&alpha; = 1)</figcaption>
+      </figure>
+    </div>
+    <p>After applying the unsharp mask, the resharpened cat is clearer than the blurred version, but not all of the original fine details are recovered. This is especially visible at the top of the cat's head and its tail, which originally had very fine hair details visible. This is because the unsharp mask only amplifies high frequencies that were retained after the Gaussian filter was applied, leaving out some high frequencies from the original image.</p>
     <h3>Part 2.2: Hybrid Images</h3>
     <h3>Part 2.3: Gaussian and Laplacian Stacks</h3>
     <h3>Part 2.4: Multiresolution Blending (a.k.a. the oraple!)</h3>
