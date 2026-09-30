@@ -110,6 +110,13 @@
             align-items: flex-end;
             margin-bottom: 2.5rem;
         }
+        .row.left {
+            margin-top: 1.5rem;
+        }
+        .row.left figure {
+            flex: 0 1 calc((100% - 40px) / 3);
+            max-width: 400px;
+        }
         .row.filters figcaption {
             text-align: left;
             margin-top: 0.5rem;
@@ -742,5 +749,61 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
       <figure><img src="./media/fig342-oraple.jpg" alt="(l)"><figcaption>(l)</figcaption></figure>
     </div>
     <p>By combining the above Gaussian and Laplacian stacks, we can recreate Szeliski Figure 3.42 by sampling the apple, orange, and blended photos at levels 0, 2, and 4, additionally demonstrating the effects of the binary blend mask.</p>
-    
+
+    <h4>Yosemite + the Dolomites (vertical seam)</h4>
+    <div class="row">
+      <figure>
+        <img src="./media/blend-yosemite.jpg" alt="Yosemite">
+        <figcaption>Yosemite</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/blend-dolomites.jpg" alt="Dolomites">
+        <figcaption>Dolomites (cropped and resized to match)</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/blend-mountains-mask.jpg" alt="vertical mask">
+        <figcaption>Vertical mask</figcaption>
+      </figure>
+    </div>
+    <div class="row left">
+      <figure>
+        <img src="./media/blend-mountains-naive.jpg" alt="naive cut">
+        <figcaption>Hard cut with the vertical mask</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/blend-mountains.jpg" alt="multiresolution blend">
+        <figcaption><b>Multiresolution blend</b></figcaption>
+      </figure>
+    </div>
+
+    <h4>Disco ball in space (circular mask)</h4>
+    <div class="row">
+      <figure>
+        <img src="./media/blend-space.jpg" alt="space">
+        <figcaption>Space background</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/blend-discoball.jpg" alt="disco ball placed">
+        <figcaption>Disco ball, resized and placed on the background</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/blend-disco-mask.jpg" alt="circular mask">
+        <figcaption>Circular mask</figcaption>
+      </figure>
+    </div>
+    <div class="row left">
+      <figure>
+        <img src="./media/blend-disco-naive.jpg" alt="naive cut">
+        <figcaption>Hard cut with the mask</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/blend-disco.jpg" alt="multiresolution blend">
+        <figcaption><b>Multiresolution blend</b></figcaption>
+      </figure>
+    </div>
+
+    <h4>Laplacian stack of the blend (disco ball in space)</h4>
+     <figure class="wide">
+      <img src="./media/blend-disco-levels.jpg" alt="Laplacian stack of the disco blend">
+    </figure>
 </body>
