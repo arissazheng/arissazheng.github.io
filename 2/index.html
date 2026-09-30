@@ -99,6 +99,7 @@
         .row.filters figure {
             display: flex;
             flex-direction: column;
+            flex: 0 0 auto;
         }
         .row.filters img {
             width: auto;
@@ -110,12 +111,24 @@
             align-items: flex-end;
             margin-bottom: 2.5rem;
         }
-        .row.left {
-            margin-top: 1.5rem;
+        .row.four {
+            max-width: 1620px;
+            row-gap: 1.5rem;
         }
-        .row.left figure {
-            flex: 0 1 calc((100% - 40px) / 3);
+        .row.four figure {
+            flex: 0 1 calc((100% - 60px) / 4);
             max-width: 400px;
+        }
+        .row.together figure {
+            flex: 0 1 400px;
+            max-width: 400px;
+        }
+        .row.five {
+            max-width: 1520px;
+        }
+        .row.five figure {
+            flex: 1 1 0;
+            min-width: 0;
         }
         .row.filters figcaption {
             text-align: left;
@@ -124,6 +137,9 @@
         .wide img {
             max-width: 100%;
             width: 1200px;
+        }
+        .wide.compact img {
+            width: 900px;
         }
         .grid3 {
             display: grid;
@@ -349,7 +365,7 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
     </div>
     <p>To fix the blurry results from Part 1.2, I first blurred the image with a Gaussian filter to remove high-frequency texture. Since blurring spreads each edge across its neighboring pixels, the brightness step between these neighboring pixels gets smaller. The maximum gradient magnitude dropped from 0.85 to 0.18, so with the Gaussian blur, I tested thresholds 0.02 to 0.08.</p>
 
-    <div class="row">
+    <div class="row four">
       <figure>
         <img src="./media/part1-3-blur-edges-0.02.jpg" alt="threshold 0.02">
         <figcaption>0.02</figcaption>
@@ -362,16 +378,15 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
         <img src="./media/part1-3-blur-edges-0.08.jpg" alt="threshold 0.08">
         <figcaption>0.08</figcaption>
       </figure>
+      <figure>
+        <img src="./media/part1-3-blur-edges-0.05.jpg" alt="binarized edge image after blurring, threshold 0.05">
+        <figcaption><b>Final binarized edge image, threshold = 0.05</b></figcaption>
+      </figure>
     </div>
-
-    <figure class="featured">
-      <img src="./media/part1-3-blur-edges-0.05.jpg" alt="binarized edge image after blurring, threshold 0.05">
-      <figcaption><b>Final binarized edge image, threshold = 0.05</b></figcaption>
-    </figure>
     <p> In the tested thresholds 0.02, 0.03, 0.05, and 0.08, 0.05 was the best image since it retained sufficient edge details from the man's face, jacket, and camera with a bit of detail left in the background, yet the lines weren't too thick or too thin for the image to be unclear. The 0.02 and 0.03 images on the other hand, have very thick lines, which obscure parts of the image and introduce a bit of noise with the grass and sky areas. The 0.08 image, however, is quite thin and loses details, with incomplete edges in the man's legs and the camera. A tradeoff of the selected 0.05 image as well as the 0.08 image is that both lack detail in the skyline.</p>
 
     <h4>Comparison with Part 1.2</h4>
-    <div class="row">
+    <div class="row together">
       <figure>
         <img src="./media/part1-2-edges-0.2.jpg" alt="finite difference edges, threshold 0.2">
         <figcaption>Part 1.2: finite difference only (threshold 0.2)</figcaption>
@@ -419,7 +434,7 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
     </div>
 
     <h4>Verifying Method 1 and Method 2 give the same result</h4>
-    <div class="row">
+    <div class="row together">
       <figure>
         <img src="./media/part1-3-blur-gradient-magnitude.jpg" alt="method 1 gradient magnitude">
         <figcaption>Method 1: blur, then D<sub>x</sub>/D<sub>y</sub></figcaption>
@@ -609,7 +624,7 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
     <h3>Part 2.2: Hybrid Images</h3>
     <p>Hybrid images combine two images by combining the high frequencies from one image and the low frequencies from another image. This creates an optical illusion, where if you stand close to the hybrid image, it looks like the high frequency image, and if you stand far away, it looks like the low frequency image. The starter code helps align the two images with rotations, shifts, and scaling, given two user-made selections of alignment points on each image. To create the low frequency image, you can apply a Gaussian filter to one image, and to create the high frequency image, you can subtract the Gaussian-filtered version of itself from itself. After adding the two, the resulting hybrid image is cropped since the image that was rotated results in a black padding near the borders.</p>
     <h4>Derek + Nutmeg: full process</h4>
-    <div class="row bottoms">
+    <div class="row bottoms together">
       <figure>
         <img src="./media/DerekPicture.jpg" alt="Derek original">
         <figcaption>Derek (original)</figcaption>
@@ -620,7 +635,7 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
       </figure>
     </div>
 
-    <div class="row">
+    <div class="row five">
       <figure>
         <img src="./media/derek-nutmeg-im1-aligned.jpg" alt="Derek aligned">
         <figcaption>Derek (aligned)</figcaption>
@@ -637,12 +652,11 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
         <img src="./media/derek-nutmeg-lowpass.jpg" alt="Nutmeg low-pass">
         <figcaption>Nutmeg (low frequency)</figcaption>
       </figure>
+      <figure>
+        <img src="./media/derek-nutmeg-hybrid.jpg" alt="Derek and Nutmeg hybrid">
+        <figcaption><b>Hybrid result</b></figcaption>
+      </figure>
     </div>
-
-    <figure class="featured">
-      <img src="./media/derek-nutmeg-hybrid.jpg" alt="Derek and Nutmeg hybrid">
-      <figcaption><b>Hybrid result</b></figcaption>
-    </figure>
 
     <h4>Fourier transforms</h4>
     <div class="row">
@@ -751,7 +765,7 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
     <p>By combining the above Gaussian and Laplacian stacks, we can recreate Szeliski Figure 3.42 by sampling the apple, orange, and blended photos at levels 0, 2, and 4, additionally demonstrating the effects of the binary blend mask.</p>
 
     <h4>Yosemite + the Dolomites (vertical seam)</h4>
-    <div class="row">
+    <div class="row four">
       <figure>
         <img src="./media/blend-yosemite.jpg" alt="Yosemite">
         <figcaption>Yosemite</figcaption>
@@ -764,8 +778,6 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
         <img src="./media/blend-mountains-mask.jpg" alt="vertical mask">
         <figcaption>Vertical mask</figcaption>
       </figure>
-    </div>
-    <div class="row left">
       <figure>
         <img src="./media/blend-mountains-naive.jpg" alt="naive cut">
         <figcaption>Hard cut with the vertical mask</figcaption>
@@ -777,7 +789,7 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
     </div>
 
     <h4>Disco ball in space (circular mask)</h4>
-    <div class="row">
+    <div class="row four">
       <figure>
         <img src="./media/blend-space.jpg" alt="space">
         <figcaption>Space background</figcaption>
@@ -790,8 +802,6 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
         <img src="./media/blend-disco-mask.jpg" alt="circular mask">
         <figcaption>Circular mask</figcaption>
       </figure>
-    </div>
-    <div class="row left">
       <figure>
         <img src="./media/blend-disco-naive.jpg" alt="naive cut">
         <figcaption>Hard cut with the mask</figcaption>
@@ -803,7 +813,7 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
     </div>
 
     <h4>Laplacian stack of the blend (disco ball in space)</h4>
-     <figure class="wide">
+     <figure class="wide compact">
       <img src="./media/blend-disco-levels.jpg" alt="Laplacian stack of the disco blend">
     </figure>
 </body>
