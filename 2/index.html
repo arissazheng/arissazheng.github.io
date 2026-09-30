@@ -106,6 +106,10 @@
             margin-top: auto;
             align-self: flex-start;
         }
+        .row.bottoms {
+            align-items: flex-end;
+            margin-bottom: 2.5rem;
+        }
         .row.filters figcaption {
             text-align: left;
             margin-top: 0.5rem;
@@ -576,7 +580,102 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
       </figure>
     </div>
     <p>After applying the unsharp mask, the resharpened cat is clearer than the blurred version, but not all of the original fine details are recovered. This is especially visible at the top of the cat's head and its tail, which originally had very fine hair details visible. This is because the unsharp mask only amplifies high frequencies that were retained after the Gaussian filter was applied, leaving out some high frequencies from the original image.</p>
+   
     <h3>Part 2.2: Hybrid Images</h3>
+    <p>Hybrid images combine two images by combining the high frequencies from one image and the low frequencies from another image. This creates an optical illusion, where if you stand close to the hybrid image, it looks like the high frequency image, and if you stand far away, it looks like the low frequency image. The starter code helps align the two images with rotations, shifts, and scaling, given two user-made selections of alignment points on each image. To create the low frequency image, you can apply a Gaussian filter to one image, and to create the high frequency image, you can subtract the Gaussian-filtered version of itself from itself. After adding the two, the resulting hybrid image is cropped since the image that was rotated results in a black padding near the borders.</p>
+    <h4>Derek + Nutmeg: full process</h4>
+    <div class="row bottoms">
+      <figure>
+        <img src="./media/DerekPicture.jpg" alt="Derek original">
+        <figcaption>Derek (original)</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/nutmeg.jpg" alt="Nutmeg original">
+        <figcaption>Nutmeg (original)</figcaption>
+      </figure>
+    </div>
+
+    <div class="row">
+      <figure>
+        <img src="./media/derek-nutmeg-im1-aligned.jpg" alt="Derek aligned">
+        <figcaption>Derek (aligned)</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/derek-nutmeg-im2-aligned.jpg" alt="Nutmeg aligned">
+        <figcaption>Nutmeg (aligned)</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/derek-nutmeg-highpass.jpg" alt="Derek high-pass">
+        <figcaption>Derek (high frequency)</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/derek-nutmeg-lowpass.jpg" alt="Nutmeg low-pass">
+        <figcaption>Nutmeg (low frequency)</figcaption>
+      </figure>
+    </div>
+
+    <figure class="featured">
+      <img src="./media/derek-nutmeg-hybrid.jpg" alt="Derek and Nutmeg hybrid">
+      <figcaption><b>Hybrid result</b></figcaption>
+    </figure>
+
+    <h4>Fourier transforms</h4>
+    <div class="row">
+      <figure>
+        <img src="./media/derek-nutmeg-fft-im1.jpg" alt="FFT Derek">
+        <figcaption>Derek</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/derek-nutmeg-fft-im2.jpg" alt="FFT Nutmeg">
+        <figcaption>Nutmeg</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/derek-nutmeg-fft-highpass.jpg" alt="FFT high-pass">
+        <figcaption>Derek, high-pass</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/derek-nutmeg-fft-lowpass.jpg" alt="FFT low-pass">
+        <figcaption>Nutmeg, low-pass</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/derek-nutmeg-fft-hybrid.jpg" alt="FFT hybrid">
+        <figcaption>Hybrid</figcaption>
+      </figure>
+    </div>
+    <p>The Fourier transforms of each of the above images represent the image in the frequency domain. When applying the low-pass filter, the brightness is concentrated in the middle of the image, whereas when applying the high-pass filter, the brightness is concentrated in the outer regions of the image. The hybrid image's fourier transform combines the center brightness of the low-pass filtered image and the outer brightness of the high-pass filtered image.</p>
+   
+    <h4>Choosing the cutoff frequencies</h4>
+    <p>In terms of choosing the cutoff frequencies, &sigma;<sub>2</sub> = 8 allowed Nutmeg's general shape, coloring, and darker fur markings to remain visible, while finer details like her whiskers and fur texture were removed. For &sigma;<sub>1</sub> = 4, Derek's facial features like his eyes and smile were able to be seen. A smaller &sigma;<sub>2</sub> let too much of Nutmeg's detail through, so she competed with Derek up close, and a larger &sigma;<sub>1</sub> kept Derek visible even from far away. With these cutoff frequencies, the hybrid image combines Derek and Nutmeg's features by retaining general shapes from one and finer details from the other, so that they're not competing for visibility.</p>
+    <h4>Professor Efros + Taylor Swift</h4>
+    <div class="row">
+      <figure>
+        <img src="./media/efros-taylorswift-im1-aligned.jpg" alt="Efros">
+        <figcaption>Professor Efros (high-frequency)</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/efros-taylorswift-im2-aligned.jpg" alt="Taylor Swift">
+        <figcaption>Taylor Swift (low-frequency)</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/efros-taylorswift-hybrid.jpg" alt="Efros and Taylor Swift hybrid">
+        <figcaption>Hybrid (&sigma;<sub>1</sub> = 4, &sigma;<sub>2</sub> = 10)</figcaption>
+      </figure>
+    </div>
+    <h4>Marten + Professor Ng</h4>
+    <div class="row">
+      <figure>
+        <img src="./media/marten-ren-im1-aligned.jpg" alt="Marten">
+        <figcaption>Marten (high-frequency)</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/marten-ren-im2-aligned.jpg" alt="Ren">
+        <figcaption>Professor Ng (low-frequency)</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/marten-ren-hybrid.jpg" alt="Marten and Ren hybrid">
+        <figcaption>Hybrid (&sigma;<sub>1</sub> = 4, &sigma;<sub>2</sub> = 10)</figcaption>
+      </figure>
+    </div>
     <h3>Part 2.3: Gaussian and Laplacian Stacks</h3>
     <h3>Part 2.4: Multiresolution Blending (a.k.a. the oraple!)</h3>
     
