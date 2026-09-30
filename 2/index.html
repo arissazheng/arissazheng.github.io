@@ -114,6 +114,24 @@
             text-align: left;
             margin-top: 0.5rem;
         }
+        .wide img {
+            max-width: 100%;
+            width: 1200px;
+        }
+        .grid3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            max-width: 750px;
+        }
+        .grid3 figure {
+            margin: 0;
+            text-align: center;
+        }
+        .grid3 img {
+            width: 100%;
+            max-width: none;
+        }
     </style>
 </head>
 <body>
@@ -676,7 +694,53 @@ Dy = np.array([[1], [-1]], dtype=np.float64)</code></pre>
         <figcaption>Hybrid (&sigma;<sub>1</sub> = 4, &sigma;<sub>2</sub> = 10)</figcaption>
       </figure>
     </div>
-    <h3>Part 2.3: Gaussian and Laplacian Stacks</h3>
-    <h3>Part 2.4: Multiresolution Blending (a.k.a. the oraple!)</h3>
+    <h3>Part 2.3 & 2.4: Multi-Resolution Blending and the Oraple Journey</h3>
+    <p>Gaussian and Laplacian stacks are used to create a multi-resolution blend of two images. In a Gaussian stack, an image is progressively blurred using an increasing &sigma;, or value of Gaussian blur, at a fixed dimension, in contrast to a Gaussian pyramid which downsamples the image. Laplacian stacks subtract the difference between neighboring Gaussian levels, storing fine details at top layers, edges and other basic features at middle layers, and large background areas at bottom layers.</p>
+    <h4>Gaussian stacks (levels 0&ndash;5, left to right)</h4>
+    <figure class="wide">
+      <img src="./media/apple-gaussian-stack.jpg" alt="apple Gaussian stack">
+      <figcaption>Apple</figcaption>
+    </figure>
+    <figure class="wide">
+      <img src="./media/orange-gaussian-stack.jpg" alt="orange Gaussian stack">
+      <figcaption>Orange</figcaption>
+    </figure>
+
+    <h4>Laplacian stacks (levels 0&ndash;5, left to right)</h4>
+    <figure class="wide">
+      <img src="./media/apple-laplacian-stack.jpg" alt="apple Laplacian stack">
+      <figcaption>Apple</figcaption>
+    </figure>
+    <figure class="wide">
+      <img src="./media/orange-laplacian-stack.jpg" alt="orange Laplacian stack">
+      <figcaption>Orange</figcaption>
+    </figure>
+
+    <h4>Binary blend mask</h4>
+    <figure class="wide">
+      <img src="./media/mask-gaussian-stack.jpg" alt="mask Gaussian stack">
+    </figure>
+    <p>This mask represents how the two images should be blended: how much of each image should be shown and how much of a gradient there should be / the smoothness of the blend. In the above example, the white part of the mask represents the apple, and the black part of the mask represents the orange.</p>
+    
+    <h4>Recreating Szeliski Figure 3.42</h4>
+    
+    <div class="grid3">
+      <figure><img src="./media/fig342-level0-apple.jpg" alt="(a)"><figcaption>(a)</figcaption></figure>
+      <figure><img src="./media/fig342-level0-orange.jpg" alt="(b)"><figcaption>(b)</figcaption></figure>
+      <figure><img src="./media/fig342-level0-blend.jpg" alt="(c)"><figcaption>(c)</figcaption></figure>
+
+      <figure><img src="./media/fig342-level2-apple.jpg" alt="(d)"><figcaption>(d)</figcaption></figure>
+      <figure><img src="./media/fig342-level2-orange.jpg" alt="(e)"><figcaption>(e)</figcaption></figure>
+      <figure><img src="./media/fig342-level2-blend.jpg" alt="(f)"><figcaption>(f)</figcaption></figure>
+
+      <figure><img src="./media/fig342-level4-apple.jpg" alt="(g)"><figcaption>(g)</figcaption></figure>
+      <figure><img src="./media/fig342-level4-orange.jpg" alt="(h)"><figcaption>(h)</figcaption></figure>
+      <figure><img src="./media/fig342-level4-blend.jpg" alt="(i)"><figcaption>(i)</figcaption></figure>
+
+      <figure><img src="./media/fig342-apple.jpg" alt="(j)"><figcaption>(j)</figcaption></figure>
+      <figure><img src="./media/fig342-orange.jpg" alt="(k)"><figcaption>(k)</figcaption></figure>
+      <figure><img src="./media/fig342-oraple.jpg" alt="(l)"><figcaption>(l)</figcaption></figure>
+    </div>
+    <p>By combining the above Gaussian and Laplacian stacks, we can recreate Szeliski Figure 3.42 by sampling the apple, orange, and blended photos at levels 0, 2, and 4, additionally demonstrating the effects of the binary blend mask.</p>
     
 </body>
