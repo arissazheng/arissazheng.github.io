@@ -12,3 +12,5 @@ venv/
 .DS_Store
 1/colorize_skel.py
 2/main.py
+2/align_image_code.py
+2/hybrid_image_starter.py
