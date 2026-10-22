@@ -168,7 +168,15 @@ v   = f(lowpass(v_1) + f_highpass(v_2))</code></pre>
 
     
     <h3>Part 1.2.2: Out-of-Distribution Testing</h3>
+    <p>With the denoiser we trained above, now we can test and visualize its results on different noise levels (sigmas) from 0.0 to 1.0.</p>
+    <img src = "media/b-1-2-2.png" alt = "OOD noisy inputs, one row per sigma [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]">
+    <img src = "media/b-1-2-2-denoise.png" alt = "OOD denoised outputs, one row per sigma [0.0. 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]">
+    
     <h3>Part 1.2.3: Denoising Pure Noise</h3>
+    <p>Below are the results from denoising pure noise to get a clean image x across 5 epochs as well as a loss plot. In the generated outputs, the results look very similar across epochs with a blurry image, kind of like a "8" or "9" digit. Epoch 5's outputs are slightly more defined than epoch 1's outputs (for example, the tail of the "9" seems less connected from the rounded part of the digit). Epoch 5 is slightly less blurry because when going from epoch to epoch, the model weights are continuously updated to get closer to the pixel-wise mean of the training set of handdrawn digits. The reason for the blurriness overall is because the model takes the average of the MNIST training images, especially at the beginning of training when model weights are randomly initialized. </p>
+    <img src = "media/b-1-2-3-epoch1.png" alt = "Epoch 1: pure noise input / output">
+    <img src = "media/b-1-2-3-epoch5.png" alt = "Epoch 5: pure noise input / output">
+    <img src = "media/b-1-2-3-purenoise.png" alt = "Loss plot (optimizer step vs. mean squared error)">
 
     <h2>Part 2: Flow Matching</h2>
     <h3>Part 2.1: Implementing a Time-conditioned UNet</h3>
