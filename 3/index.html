@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Project 2</title>
+    <!-- <title>Project 2</title> -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
@@ -24,6 +24,16 @@
         a {
             font-family: 'Josefin Sans', sans-serif;
         }
+        pre {
+            background: rgba(0, 0, 0, 0.06);
+            border-radius: 6px;
+            padding: 0.8rem 1rem;
+            overflow-x: auto;
+        }
+        pre code {
+            font-family: Menlo, Consolas, monospace;
+            font-size: 0.95rem;
+        }
         img {
             display: block;
             max-width: 100%;
@@ -42,7 +52,9 @@
     </style>
 </head>
 <body>
+    
     <h1>Project 3: Fun with Flow Models</h1>
+    <h1>Part A</h1>
     <p><a href="../index.html">Back to home</a></p>
     <h2>Part 1: Visualizing Training and Sampling</h2>
     <h3>Part 1.1 Constructing Noisy Training Inputs</h3>
@@ -120,7 +132,10 @@
 
     <h3>Part 3.3: Visual Anagrams</h3>
     <p>Visual Anagrams are images where the subject looks different based on the orientation of the image. With each desired subject of a visual anagram, we can create a velocity estimate based on a prompt embedding at step t. To create the second desired subject, we estimate another velocity after flipping the image upside down and denoising with a second prompt. After flipping the second velocity, we can perform a Euler step with the average of the two velocity estimates. </p>
-    <p>The equations for visual anagrams are: v_1 = CFG velocity(x_t, t, p_1), v_2 = CFG velocity(flip(x_t), t, p_2), v = (v_1 + v_2)/2</p>
+    <p>The equations for visual anagrams are:</p>
+    <pre><code>v_1 = CFG velocity(x_t, t, p_1)
+v_2 = CFG velocity(flip(x_t), t, p_2)
+v   = (v_1 + v_2) / 2</code></pre>
     <img src="media/part3-3-1.png" alt="An oil painting of an old man vs. an oil painting of people around a campfire">
     <figcaption>An oil painting of an old man vs. an oil painting of people around a campfire</figcaption>
     <img src="media/lithograph.png" alt="A lithograph of a snowy mountain village vs. a lithograph of a horse">
@@ -128,8 +143,10 @@
     
     <h3>Part 3.4: Hybrid Images</h3>
     <p>Hybrid images are images that are an average object from two different images. By using a diffusion model to create hybrid image, similar to visual anagrams, we can predict velocities with different prompt embeddings. By combining the high frequencies from one image and the low frequencies from another image, the resulting image up close looks like the high frequency image, and the resulting image far away looks like the low frequency image.</p>
-    <p>The equations used for generating hybrid images with diffusion models are v_1 = CFG velocity(x_t, t, p_1), v_2 = CFG velocity(x_t, t, p_2), v = f(lowpass(v_1) + f_highpass(v_2))
-    </p>
+    <p>The equations used for generating hybrid images with diffusion models are:</p>
+    <pre><code>v_1 = CFG velocity(x_t, t, p_1)
+v_2 = CFG velocity(x_t, t, p_2)
+v   = f(lowpass(v_1) + f_highpass(v_2))</code></pre>
     <img src="media/waterfall-lithograph.png" alt="Close: a lithograph of a waterfall">
     <figcaption>Close: a lithograph of a waterfall (high frequency image)</figcaption>
     <img src="media/lithograph-skull.png" alt="Far: a lithograph of a skull">
@@ -138,6 +155,29 @@
     <figcaption>Close: a lithograph of a forest (high frequency image)</figcaption>
     <img src="media/lithograph-cat.png" alt="Distant: a lithograph of a cat">
     <figcaption>Distant: a lithograph of a cat (low frequency image)</figcaption>
+
+    <h1>Part B</h1>
+    <h2>Part 1: Training a Single-step Denoising UNet</h2>
+    <h3>Part 1.1: Implementing the UNet</h3>
+    <h3>Part 1.2: Using the UNet to Train a Denoiser</h3>
+    <h3>Part 1.2.1: Training</h3>
+    <p>A UNet is a CNN for image-to-image tasks like denoising or generation. Below, we aim to clean up noisy images of digits with a UNET. A denoiser as a UNET takes a Gaussian blur to clean up images (removees high frequency grain), and the trained model uses the mean squared error loss between the output and the original image to predict what the clean digit should look like. With each batch, new noise was added so that the model learns to clean up a range of noise levels from each epoch.</p>
+    <img src = "media/b-1-2-1-1.png" alt="Epoch 1: clean / noisy (sig=0.5) / denoised">
+    <img src = "media/b-1-2-1.png" alt = "Epoch 5: clean / noisy (sig=0.5) / denoised">
+    <img src = "media/b-1-2-1-loss.png" alt = "Training loss">
+
+    
+    <h3>Part 1.2.2: Out-of-Distribution Testing</h3>
+    <h3>Part 1.2.3: Denoising Pure Noise</h3>
+
+    <h2>Part 2: Flow Matching</h2>
+    <h3>Part 2.1: Implementing a Time-conditioned UNet</h3>
+    <h3>Part 2.2: Training the Time-conditioned UNet</h3>
+    <h3>Part 2.3: Sampling from the Time-conditioned UNet</h3>
+    <h3>Part 2.4: Implementing a Class-conditioned UNet</h3>
+    <h3>Part 2.5: Training the Class-conditioned UNet</h3>
+    <h3>Part 2.6: Sampling from the Class-conditioned UNet</h3>
+
 
 
 
