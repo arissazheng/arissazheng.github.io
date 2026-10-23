@@ -130,13 +130,23 @@
                 grid-template-columns: 1fr;
             }
         }
+        .home-link {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+        }
+        .home-link img {
+            width: 160px;
+            height: auto;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
+    <a class="home-link" href="../index.html"><img src="../home-media/az-initials.gif" alt="Back to home"></a>
     
     <h1>Project 3: Fun with Flow Models</h1>
     <h1 class="part-header">Part A</h1>
-    <p><a href="../index.html">Back to home</a></p>
     <h2>Part 1: Visualizing Training and Sampling</h2>
     <h3>Part 1.1 Constructing Noisy Training Inputs</h3>
     <p>Constructing a noisy training input by interpolating between a clean image and Gaussian noise. Below is a clean image along with added noise at t=0.25, t=0.5, and t=0.75</p>

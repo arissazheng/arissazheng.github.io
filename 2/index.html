@@ -155,11 +155,21 @@
             width: 100%;
             max-width: none;
         }
+        .home-link {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+        }
+        .home-link img {
+            width: 160px;
+            height: auto;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
+    <a class="home-link" href="../index.html"><img src="../home-media/az-initials.gif" alt="Back to home"></a>
     <h1>Project 2: Fun With Filters and Frequencies</h1>
-    <p><a href="../index.html">Back to home</a></p>
     <h2>Part 1: Fun With Filters</h2>
     <h3>Part 1.1: Convolutions From Scratch!</h3>
     <p> A convolution creates a new image by applying a kernel (matrix with varying weights and corresponding effects) to the original image. The kernel is applied to each pixel in the original image after getting flipped along the x and y axes, then getting multiplied and summed with the surrounding pixels to produce an output pixel. Examples of kernel effects include a matrix with equal weights (blurring effect) and a finite difference kernel (which uses subtraction to detect edges).</p>

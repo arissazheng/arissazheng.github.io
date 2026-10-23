@@ -170,12 +170,22 @@
         .part1-after .row {
             max-width: none;
         }
+        .home-link {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+        }
+        .home-link img {
+            width: 160px;
+            height: auto;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
+    <a class="home-link" href="../index.html"><img src="../home-media/az-initials.gif" alt="Back to home"></a>
     <h1>Project 1: Images of the Russian Empire:</h1>
     <h2 class="subtitle">Colorizing the Prokudin-Gorskii photo collection</h2>
-    <p><a href="../index.html">Back to home</a></p>
     <h2>Part 1: Results of a single-scale alignment (using NCC/L2 norm metrics) on the low resolution images (JPEG files)</h2>
     <div class="prose">
         <p>The Prokudin-Gorskii glass plate images represent a grayscale image, with top to bottom representing the B (blue), G (green), R (red) color channels. We separate each color channel by slicing the grayscale image into thirds. Since the camera used for these original photographs took three sequential exposures, the three color channels are misaligned with small errors like a frame or camera shifting. Thus we see something like the &ldquo;Before Alignment&rdquo; cathedral.jpg image below, where there&rsquo;s visible color fringing as well as mismatched color bands at the image borders. Since alignment is relative, we only need to hold one channel (i.e. B) fixed while searching for the displacement from the other two channels so that we can translate the G &amp; R channels to remove such offsets.</p>
