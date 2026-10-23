@@ -17,6 +17,9 @@
             font-size: 4rem;
             margin-bottom: 0.1rem;
         }
+        h1.part-header {
+            font-size: 3rem;
+        }
         h2,
         h3,
         figcaption,
@@ -42,6 +45,23 @@
         .stack img {
             margin-bottom: 0;
         }
+        .stack.small img {
+            max-width: min(100%, 500px);
+        }
+        /* sized so each panel roughly matches the 1.2 / 1.3 panels */
+        .stack.velocity img {
+            max-width: min(100%, 1000px);
+        }
+        .velocity-original img {
+            max-width: min(100%, 260px);
+        }
+        /* scaled to about the same panel size as parts 1.2 - 1.4 */
+        img.img-md {
+            max-width: min(100%, 770px);
+        }
+        img.img-lg {
+            max-width: min(100%, 1030px);
+        }
         figure {
             margin-left: 0;
             margin-right: 0;
@@ -49,86 +69,178 @@
         figure img {
             margin-bottom: 0.4rem;
         }
+        .side-by-side {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        .side-by-side > section {
+            flex: 1;
+            min-width: 0;
+        }
+        .denoise-pair {
+            gap: 5rem;
+            max-width: 1340px;
+        }
+        /* column widths match the image aspect ratios so both sides render at the same height */
+        .denoise-pair > section:first-child {
+            flex: 793 1 0;
+        }
+        .denoise-pair > section:last-child {
+            flex: 1193 1 0;
+        }
+        .denoise-pair .stack.small img {
+            width: 100%;
+            max-width: 100%;
+        }
+        .velocity-row {
+            gap: 2.5rem;
+        }
+        .side-by-side.velocity-row > figure {
+            flex: 0 0 260px;
+        }
+        .velocity-row > .stack {
+            flex: 0 1 1000px;
+            min-width: 0;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+        .grid-2 figure {
+            margin-top: 0;
+        }
+        .side-by-side figure {
+            flex: 1;
+            min-width: 0;
+            margin-top: 0;
+        }
+        .side-by-side.compact {
+            gap: 2.5rem;
+        }
+        .side-by-side.compact figure {
+            flex: 0 1 auto;
+        }
+        @media (max-width: 600px) {
+            .side-by-side {
+                flex-direction: column;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     
     <h1>Project 3: Fun with Flow Models</h1>
-    <h1>Part A</h1>
+    <h1 class="part-header">Part A</h1>
     <p><a href="../index.html">Back to home</a></p>
     <h2>Part 1: Visualizing Training and Sampling</h2>
     <h3>Part 1.1 Constructing Noisy Training Inputs</h3>
     <p>Constructing a noisy training input by interpolating between a clean image and Gaussian noise. Below is a clean image along with added noise at t=0.25, t=0.5, and t=0.75</p>
     <img src="media/part-1-1.png" alt="Noisy Training Inputs">
 
-    <h3>Part 1.2 Classical Denoising</h3>
-    <p>Side by side comparison of the noisy input images from above and Gaussian-denoised images at blur sigma = 8.0, 4.0, and 2.0.</p>
-    <div class="stack">
-        <img src="media/part1-2-sigma-8.png" alt="Gaussian denoising at sigma 8">
-        <img src="media/part1-2-sigma-4.png" alt="Gaussian denoising at sigma 4">
-        <img src="media/part1-2-sigma-2.png" alt="Gaussian denoising at sigma 2">
-    </div>
-
-    <h3>Part 1.3 One-Step Denoising</h3>
-    <p>Side by side comparison of the original image, the noisy input, and the one-step denoised image using a pretrained flow model.</p>
-    <div class="stack">
-        <img src="media/part1-3-1.png" alt="Denoising with flow model from t = 0.25">
-        <img src="media/part1-3-2.png" alt="Denoising with flow model from t = 0.5">
-        <img src="media/part1-3-3.png" alt="Denoising with flow model from t = 0.75">
+    <div class="side-by-side denoise-pair">
+        <section>
+            <h3>Part 1.2 Classical Denoising</h3>
+            <p>Side by side comparison of the noisy input images from above and Gaussian-denoised images at blur sigma = 8.0, 4.0, and 2.0.</p>
+            <div class="stack small">
+                <img src="media/part1-2-sigma-8.png" alt="Gaussian denoising at sigma 8">
+                <img src="media/part1-2-sigma-4.png" alt="Gaussian denoising at sigma 4">
+                <img src="media/part1-2-sigma-2.png" alt="Gaussian denoising at sigma 2">
+            </div>
+        </section>
+        <section>
+            <h3>Part 1.3 One-Step Denoising</h3>
+            <p>Side by side comparison of the original image, the noisy input, and the one-step denoised image using a pretrained flow model.</p>
+            <div class="stack small">
+                <img src="media/part1-3-1.png" alt="Denoising with flow model from t = 0.25">
+                <img src="media/part1-3-2.png" alt="Denoising with flow model from t = 0.5">
+                <img src="media/part1-3-3.png" alt="Denoising with flow model from t = 0.75">
+            </div>
+        </section>
     </div>
 
     <h3>Part 1.4 Visualizing Velocity</h3>
     <p>At noise levels t = 0.25, 0.50, and 0.75, the model's predicted update (1 &minus; t) v&#770; captures the coarse structure of the ground truth update x<sub>1</sub> &minus; x<sub>t</sub> but not its fine-grained noise, so the per-pixel root mean square error is highest at edges and high frequency details and shrinks as t increases.</p>
-    <figure>
-        <img src="media/original.png" alt="Original image">
-        <figcaption>Original image</figcaption>
-    </figure>
-    <div class="stack">
-        <img src="media/part-1-4-0.25.png" alt="Noisy image, predicted update, ground truth update, and RGB RMS error at t = 0.25">
-        <img src="media/part-1-4-0.50.png" alt="Noisy image, predicted update, ground truth update, and RGB RMS error at t = 0.50">
-        <img src="media/part-1-4-0.75.png" alt="Noisy image, predicted update, ground truth update, and RGB RMS error at t = 0.75">
+    <div class="side-by-side velocity-row">
+        <figure class="velocity-original">
+            <img src="media/original.png" alt="Original image">
+            <figcaption>Original image</figcaption>
+        </figure>
+        <div class="stack velocity">
+            <img src="media/part-1-4-0.25.png" alt="Noisy image, predicted update, ground truth update, and RGB RMS error at t = 0.25">
+            <img src="media/part-1-4-0.50.png" alt="Noisy image, predicted update, ground truth update, and RGB RMS error at t = 0.50">
+            <img src="media/part-1-4-0.75.png" alt="Noisy image, predicted update, ground truth update, and RGB RMS error at t = 0.75">
+        </div>
     </div>
 
     <h3>Part 1.5 Iterative Denoising with Euler Sampling</h3>
     <p>Using Euler sampling, we can iteratively denoise the image by sampling from the model's predicted update at each step. Below is the denoised image along with side-by-side comparisons with the original image, the Gaussian-denoised image, and the one-step denoised image.</p>
     <div class="stack">
-        <img src="media/part1-5-euler.png" alt="Euler sampling from t = 0.50 to t = 1.00">
-        <img src="media/part1-5comparison.png" alt="Original, blur, one-step denoising, and Euler sampling">
+        <img class="img-md" src="media/part1-5-euler.png" alt="Euler sampling from t = 0.50 to t = 1.00">
+        <img class="img-lg" src="media/part1-5comparison.png" alt="Original, blur, one-step denoising, and Euler sampling">
     </div>
 
     <h3>Part 1.6 Generating Images from Noise</h3>
     <p>Starting from five independent Gaussian noise images, 50 Euler steps with the prompt "a high quality photo" and no guidance produces images with realistic colors and textures for portraits with vague and incoherent subjects.</p>
-    <img src="media/part1-6.png" alt="Generated images from noise">
+    <img class="img-lg" src="media/part1-6.png" alt="Generated images from noise">
 
     <h2>Part 2: Conditional Generation and Guidance</h2>
     <h3>Part 2.1 Classifier-Free Guidance</h3>
     <p>Using classifier-free guidance, we can generate images with better prompt alignment and image quality.</p>
-    <img src="media/part2.png" alt="Classifier-Free Guidance">
+    <img class="img-lg" src="media/part2.png" alt="Classifier-Free Guidance">
 
     <h2>Part 3: Creative Applications</h2>
 
     <h3>Part 3.1: Image-to-Image Editing</h3>
     <p>By adding noise to an image and denoising it with the flow model, we can edit the image. Below is the campanile edited, as well as a picture of my cat Benny and some flowers.</p>
-    <img src="media/part3-1.png" alt="Campanile edited">
-    <img src="media/part3-1-2.png" alt="Benny edited"> 
-    <img src="media/part3-1-3.png" alt="Flowers edited">
+    <div class="grid-2">
+        <figure>
+            <img src="media/part3-1.png" alt="Campanile edited">
+        </figure>
+        <figure>
+            <img src="media/part3-1-2.png" alt="Benny edited">
+        </figure>
+        <figure>
+            <img src="media/part3-1-3.png" alt="Flowers edited">
+        </figure>
+    </div>
 
     <p>Below are examples of paintings and sketches projected onto the natural manifold. Using handdrawn images and projecting it onto the natural manifold works well because noise gets rid of high frequency details and leaves low frequency information (large shapes, colors), so a lot of sharp pencil work is no longer visible, making the image look smoother and more realistic. In the examples below, the horse sketch works particularly well at t=0.10, producing a relatively realistic horse.</p>
-    <img src="media/yoshitomo-edited.png" alt="Yoshitomo Nara dog painting edited">
-    <figcaption>Yoshitomo Nara dog painting edited</figcaption>
-    <img src="media/horse-edited.png" alt="Horse sketch edited">
-    <figcaption>Horse sketch edited</figcaption>
-    <img src="media/lambs-edited.png" alt="Lambs sketch edited">
-    <figcaption>Lambs sketch edited</figcaption>
+    <div class="grid-2">
+        <figure>
+            <img src="media/yoshitomo-edited.png" alt="Yoshitomo Nara dog painting edited">
+            <figcaption>Yoshitomo Nara dog painting edited</figcaption>
+        </figure>
+        <figure>
+            <img src="media/horse-edited.png" alt="Horse sketch edited">
+            <figcaption>Horse sketch edited</figcaption>
+        </figure>
+        <figure>
+            <img src="media/lambs-edited.png" alt="Lambs sketch edited">
+            <figcaption>Lambs sketch edited</figcaption>
+        </figure>
+    </div>
 
     <h3>Part 3.2: Text-Guided Image Generation</h3>
     <p>Using the same image-to-image editing technique, the below images are generated with modified prompts, other than "a high quality photo."</p>
-    <img src="media/campanile-thermometer.png" alt="Campanile -> a thermometer in the sky">
-    <figcaption>Prompt: "a thermometer in the sky"</figcaption>
-    <img src="media/benny-zebra.png" alt="Benny -> a superhero zebra">
-    <figcaption>Prompt: "a superhero zebra"</figcaption>
-    <img src="media/flower-lambs.png" alt="Flowers -> lambs dressed in Victorian fashion having afternoon tea">
-    <figcaption>Prompt: "lambs dressed in Victorian fashion having afternoon tea"</figcaption>
+    <div class="grid-2">
+        <figure>
+            <img src="media/campanile-thermometer.png" alt="Campanile -> a thermometer in the sky">
+            <figcaption>Prompt: "a thermometer in the sky"</figcaption>
+        </figure>
+        <figure>
+            <img src="media/benny-zebra.png" alt="Benny -> a superhero zebra">
+            <figcaption>Prompt: "a superhero zebra"</figcaption>
+        </figure>
+        <figure>
+            <img src="media/flower-lambs.png" alt="Flowers -> lambs dressed in Victorian fashion having afternoon tea">
+            <figcaption>Prompt: "lambs dressed in Victorian fashion having afternoon tea"</figcaption>
+        </figure>
+    </div>
 
     <h3>Part 3.3: Visual Anagrams</h3>
     <p>Visual Anagrams are images where the subject looks different based on the orientation of the image. With each desired subject of a visual anagram, we can create a velocity estimate based on a prompt embedding at step t. To create the second desired subject, we estimate another velocity after flipping the image upside down and denoising with a second prompt. After flipping the second velocity, we can perform a Euler step with the average of the two velocity estimates. </p>
@@ -136,10 +248,16 @@
     <pre><code>v_1 = CFG velocity(x_t, t, p_1)
 v_2 = CFG velocity(flip(x_t), t, p_2)
 v   = (v_1 + v_2) / 2</code></pre>
-    <img src="media/part3-3-1.png" alt="An oil painting of an old man vs. an oil painting of people around a campfire">
-    <figcaption>An oil painting of an old man vs. an oil painting of people around a campfire</figcaption>
-    <img src="media/lithograph.png" alt="A lithograph of a snowy mountain village vs. a lithograph of a horse">
-    <figcaption>A lithograph of a snowy mountain village vs. a lithograph of a horse</figcaption>
+    <div class="side-by-side">
+        <figure>
+            <img src="media/part3-3-1.png" alt="An oil painting of an old man vs. an oil painting of people around a campfire">
+            <figcaption>An oil painting of an old man vs. an oil painting of people around a campfire</figcaption>
+        </figure>
+        <figure>
+            <img src="media/lithograph.png" alt="A lithograph of a snowy mountain village vs. a lithograph of a horse">
+            <figcaption>A lithograph of a snowy mountain village vs. a lithograph of a horse</figcaption>
+        </figure>
+    </div>
     
     <h3>Part 3.4: Hybrid Images</h3>
     <p>Hybrid images are images that are an average object from two different images. By using a diffusion model to create hybrid image, similar to visual anagrams, we can predict velocities with different prompt embeddings. By combining the high frequencies from one image and the low frequencies from another image, the resulting image up close looks like the high frequency image, and the resulting image far away looks like the low frequency image.</p>
@@ -147,16 +265,22 @@ v   = (v_1 + v_2) / 2</code></pre>
     <pre><code>v_1 = CFG velocity(x_t, t, p_1)
 v_2 = CFG velocity(x_t, t, p_2)
 v   = lowpass(v_1) + highpass(v_2)</code></pre>
-    <img src="media/waterfall-lithograph.png" alt="Close: a lithograph of a waterfall">
-    <figcaption>Close: a lithograph of a waterfall (high frequency image)</figcaption>
-    <img src="media/lithograph-skull.png" alt="Far: a lithograph of a skull">
-    <figcaption>Far: a lithograph of a skull (low frequency image)</figcaption>
-    <img src="media/lithograph-forest.png" alt="Close: a lithograph of a forest">
-    <figcaption>Close: a lithograph of a forest (high frequency image)</figcaption>
-    <img src="media/lithograph-cat.png" alt="Distant: a lithograph of a cat">
-    <figcaption>Distant: a lithograph of a cat (low frequency image)</figcaption>
+    <div class="side-by-side compact">
+        <figure>
+            <img src="media/waterfall-lithograph.png" alt="Close: a lithograph of a waterfall">
+            <figcaption>Close: a lithograph of a waterfall (high frequency image)</figcaption>
+            <img src="media/lithograph-skull.png" alt="Far: a lithograph of a skull">
+            <figcaption>Far: a lithograph of a skull (low frequency image)</figcaption>
+        </figure>
+        <figure>
+            <img src="media/lithograph-forest.png" alt="Close: a lithograph of a forest">
+            <figcaption>Close: a lithograph of a forest (high frequency image)</figcaption>
+            <img src="media/lithograph-cat.png" alt="Distant: a lithograph of a cat">
+            <figcaption>Distant: a lithograph of a cat (low frequency image)</figcaption>
+        </figure>
+    </div>
 
-    <h1>Part B</h1>
+    <h1 class="part-header">Part B</h1>
     <h2>Part 1: Training a Single-step Denoising UNet</h2>
     <h3>Part 1.1: Implementing the UNet</h3>
     <p>UNets consist of an encoder which shrinks the image to a latent space (showing essential features) and a decoder which expands the latent space back to the image space. The encoder processes the image input with a ConvBlock, and DownBlocks downsample the image. Then a Flatten layer uses average pooling to compress the features to a 1x1. After that, an Unflatten layer uses transposed convolution to expand the features back up. Lastly, the decoder upsamples with UpBlocks. Fine details from the original image are preserved because the decoder gets concatenated with the corresponding encoder output. </p>
@@ -167,20 +291,38 @@ v   = lowpass(v_1) + highpass(v_2)</code></pre>
 
     <h3>Part 1.2.1: Training</h3>
     <p>A UNet is a CNN for image-to-image tasks like denoising or generation. Below, we aim to clean up noisy images of digits with a UNET. A denoiser as a UNET learns to remove noise, and the trained model uses the mean squared error loss between the output and the original image to predict what the clean digit should look like. With each batch, new noise was added so that the model learns to clean up noise at level sigma = 0.5.</p>
-    <img src = "media/b-1-2-1-1.png" alt="Epoch 1: clean / noisy (sig=0.5) / denoised">
-    <img src = "media/b-1-2-1.png" alt = "Epoch 5: clean / noisy (sig=0.5) / denoised">
+    <div class="side-by-side">
+        <figure>
+            <img src = "media/b-1-2-1-1.png" alt="Epoch 1: clean / noisy (sig=0.5) / denoised">
+        </figure>
+        <figure>
+            <img src = "media/b-1-2-1.png" alt = "Epoch 5: clean / noisy (sig=0.5) / denoised">
+        </figure>
+    </div>
     <img src = "media/b-1-2-1-loss.png" alt = "Training loss">
 
     
     <h3>Part 1.2.2: Out-of-Distribution Testing</h3>
     <p>With the denoiser we trained above, now we can test and visualize its results on different noise levels (sigmas) from 0.0 to 1.0.</p>
-    <img src = "media/ooo-noisy-inputs.png" alt = "OOD noisy inputs, one row per sigma [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]">
-    <img src = "media/ood-denoised-inputs.png" alt = "OOD denoised outputs, one row per sigma [0.0. 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]">
+    <div class="side-by-side">
+        <figure>
+            <img src = "media/ooo-noisy-inputs.png" alt = "OOD noisy inputs, one row per sigma [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]">
+        </figure>
+        <figure>
+            <img src = "media/ood-denoised-inputs.png" alt = "OOD denoised outputs, one row per sigma [0.0. 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]">
+        </figure>
+    </div>
     
     <h3>Part 1.2.3: Denoising Pure Noise</h3>
     <p>Below are the results from denoising pure noise to get a clean image x across 5 epochs as well as a loss plot. In the generated outputs, the results look very similar across epochs with a blurry image, kind of like a "8" or "9" digit. Epoch 5's outputs are slightly more defined than epoch 1's outputs (for example, the tail of the "9" seems less connected from the rounded part of the digit). Epoch 5 is slightly less blurry because when going from epoch to epoch, the model weights are continuously updated to get closer to the pixel-wise mean of the training set of handdrawn digits. The reason for the blurriness overall is because the model takes the average of the MNIST training images, especially at the beginning of training when random noise has no information about digits. </p>
-    <img src = "media/b-1-2-3-epoch1.png" alt = "Epoch 1: pure noise input / output">
-    <img src = "media/b-1-2-3-epoch5.png" alt = "Epoch 5: pure noise input / output">
+    <div class="side-by-side">
+        <figure>
+            <img src = "media/b-1-2-3-epoch1.png" alt = "Epoch 1: pure noise input / output">
+        </figure>
+        <figure>
+            <img src = "media/b-1-2-3-epoch5.png" alt = "Epoch 5: pure noise input / output">
+        </figure>
+    </div>
     <img src = "media/b-1-2-3-purenoise.png" alt = "Loss plot (optimizer step vs. mean squared error)">
 
     <h2>Part 2: Flow Matching</h2>
@@ -193,24 +335,48 @@ v   = lowpass(v_1) + highpass(v_2)</code></pre>
 
     <h3>Part 2.3: Sampling from the Time-conditioned UNet</h3>
     <p>Below are the results from sampling the time-conditioned UNet across 10 epochs.</p>
-    <img src = "media/timeunet-1.png" alt = "Time-conditioned UNET: epoch 1">
-    <img src = "media/timeunet-2.png" alt = "Time-conditioned UNET: epoch 5">
-    <img src = "media/timeunet-10.png" alt = "Time-conditioned UNET: epoch 10">
+    <div class="side-by-side">
+        <figure>
+            <img src = "media/timeunet-1.png" alt = "Time-conditioned UNET: epoch 1">
+        </figure>
+        <figure>
+            <img src = "media/timeunet-2.png" alt = "Time-conditioned UNET: epoch 5">
+        </figure>
+        <figure>
+            <img src = "media/timeunet-10.png" alt = "Time-conditioned UNET: epoch 10">
+        </figure>
+    </div>
 
     <h3>Part 2.4: Implementing a Class-conditioned UNet</h3>
     <p>One-hot vectors represent class labels, helping us separate and identify each digit from the MNIST dataset. To allow the UNET to understand the class of the input image, we convert each label (0 through 9) into a one-hot vector of length 10 (a list of numbers where it's all zeros except for the index of the digit, which is labeled as 1). This is fed into FCBlocks, where class multiplies the features and time is added, letting the model change its output based on the class (the digit it should be) and time (how noisy the image is). </p>
     
     <h3>Part 2.5: Training the Class-conditioned UNet</h3>
     <p>To train the class-conditioned UNet, the process is comparable to the time-conditioned UNet, except the input is a one-hot conditioning vector c representing the class of the image. Each batch mixes the clean image with noise at a specific timestep t to get a noisy image x_t; then the model predicts the velocity with the mean squared error loss. Additionally, 10% of the time, the label was hidden so that the model learns to predict the velocity without the class information.</p>
-    <img src = "media/class-conditioned-2.5.png" alt = "Loss plot (optimizer step vs. mean squared error)">
-    <img src = "media/no-sched.png" alt = "No scheduler loss plot (optimizer step vs mean squared error)">
+    <div class="side-by-side">
+        <figure>
+            <img src = "media/class-conditioned-2.5.png" alt = "Loss plot (optimizer step vs. mean squared error)">
+        </figure>
+        <figure>
+            <img src = "media/nosched.png" alt = "No scheduler loss plot (optimizer step vs mean squared error)">
+        </figure>
+    </div>
 
     <h3>Part 2.6: Sampling from the Class-conditioned UNet</h3>
     <p>Below are the results from sampling the class-conditioned UNet across 10 epochs with a learning rate starting at 1e-2 and decaying as well as a constant learning rate of 1e-3. To make up for removing the scheduler, we used the constant 1e-3 learning rate since it's the scheduler's final value.</p>
-    <img src = "media/2-6-1.png" alt = "Class-conditioned UNET, epoch 1">
-    <img src = "media/2-6-5.png" alt = "Class-conditioned UNET, epoch 5">
-    <img src = "media/2-6-10.png" alt = "Class-conditioned UNET, epoch 10">
-    <img src = "media/2-6-nosched.png" alt = "No scheduler (constant lr = 1e-3), epoch 10">
+    <div class="side-by-side">
+        <figure>
+            <img src = "media/2-6-1.png" alt = "Class-conditioned UNET, epoch 1">
+        </figure>
+        <figure>
+            <img src = "media/2-6-5.png" alt = "Class-conditioned UNET, epoch 5">
+        </figure>
+        <figure>
+            <img src = "media/2-6-10.png" alt = "Class-conditioned UNET, epoch 10">
+        </figure>
+        <figure>
+            <img src = "media/2-6-nosched.png" alt = "No scheduler (constant lr = 1e-3), epoch 10">
+        </figure>
+    </div>
 
 </body>
     
