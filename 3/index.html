@@ -159,6 +159,8 @@ v   = f(lowpass(v_1) + f_highpass(v_2))</code></pre>
     <h1>Part B</h1>
     <h2>Part 1: Training a Single-step Denoising UNet</h2>
     <h3>Part 1.1: Implementing the UNet</h3>
+    <p>UNets consist of an encoder which shrinks the image to a latent space (showing essential features) and a decoder which expands the latent space back to the image space. The encoder processes the image input wiht a ConvBlock, which downsamples the image into DownBlocks. Then a Flatten layer uses average pooling to compress the features to a 1x1. After that, an Unflatten layer uses transposed convolution to expand the features back up. Lastly, the decoder upsamples with UpBlocks. Fine details from the original image are preserved because the decoder gets concatenated with the corresponding encoder output. </p>
+
     <h3>Part 1.2: Using the UNet to Train a Denoiser</h3>
     <h3>Part 1.2.1: Training</h3>
     <p>A UNet is a CNN for image-to-image tasks like denoising or generation. Below, we aim to clean up noisy images of digits with a UNET. A denoiser as a UNET takes a Gaussian blur to clean up images (removees high frequency grain), and the trained model uses the mean squared error loss between the output and the original image to predict what the clean digit should look like. With each batch, new noise was added so that the model learns to clean up a range of noise levels from each epoch.</p>
@@ -180,14 +182,31 @@ v   = f(lowpass(v_1) + f_highpass(v_2))</code></pre>
 
     <h2>Part 2: Flow Matching</h2>
     <h3>Part 2.1: Implementing a Time-conditioned UNet</h3>
+    <p>A time-conditioned UNet that receives an image and a time step to understand how noisy an image is at that time step during the training process, ranging from t = 0 meaning noisy and t = 1 meaning clean. Two FCBlocks turn the timestep from scalar into vectors, which get multiplied with the output of the Unflatten layer and the output of the first UpBlock, so that the UNet can predict the flow at any given time. This helps us understand progress during training and sample images at different times.</p>
+    
     <h3>Part 2.2: Training the Time-conditioned UNet</h3>
+    <p>To train the time-conditioned UNet, we train the denoiser to predict the flow at time t with a random noise image from the training set. We use the MNIST dataset with batch size = 64, hidden dimension D = 64, and learning rate = 1e-2. Below is the loss plot for the time-conditioned UNET.</p>
+    <img src = "media/b-2-2.png" alt = "Loss plot (optimizer step. vs mean squared error)">
+
     <h3>Part 2.3: Sampling from the Time-conditioned UNet</h3>
+    <p>Below are the results from sampling the time-conditioned UNet across 10 epochs.</p>
+    <img src = "media/timeunet-1.png" alt = "Time-conditioned UNET: epoch 1">
+    <img src = "media/timeunet-2.png" alt = "Time-conoditioned UNET: epoch 5">
+    <img src = "media/timeunet-10.png" alt = "Time-conditioned UNET: epoch 10">
+
     <h3>Part 2.4: Implementing a Class-conditioned UNet</h3>
+    <p>One-hot vectors represent class labels, helping us separate and identify each digit from the MNIST dataset. To allow the UNET to understand the class of the input image, we convert each label (0 through 9) into a one-hot vector of length 10 (a list of numbers where it's all zeros except for the index of the digit, which is labeled as 1). This is fed into FCBlocks, where class multiples the features and time is added, letting the model change its output based on the class (the digit it should be) and time (how noisy the image is). </p>
+    
     <h3>Part 2.5: Training the Class-conditioned UNet</h3>
+    <p>To train the class-conditioned UNet, the process is comparable to the time-conditioned UNet, except the input is a one-hot conditioning vector c representing the class of the image. Each batch mixes the clean image with noise at a specific timestep t to get a noisy image x_t; then the model predicts the velocity with the mean squared error loss. Additionally, 10% of the time, the label was hidden so that the model learns to predict the velocity without the class information.</p>
+    <img src = "media/class-conditioned-2.5.png" alt = "Loss plot (optimizer step vs. mean squared error)">
+
     <h3>Part 2.6: Sampling from the Class-conditioned UNet</h3>
-
-
-
+    <p>Below are the results from sampling the class-conditioned UNet across 5 epochs with a learning rate starting at 1e-2 and decaying as well as a constant learning rate of 1e-3.</p>
+    <img src = "media/2-6-1.png" alt = "Class-conditioned UNET, epoch 1">
+    <img src = "media/2-6-5.png" alt = "Class-conditioned UNET, epoch 5">
+    <img src = "media/2-6-10.png" alt = "Class-conditioned UNET, epoch 10">
+    <img src = "media/2-6-nosched.png" alt = "No scheduler (constant lr = 1e-3), epoch 10">
 
 </body>
     
