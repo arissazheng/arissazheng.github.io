@@ -90,7 +90,7 @@
     </div>
 
     <h3>Part 1.5 Iterative Denoising with Euler Sampling</h3>
-    <p>Using Euler sampling, we can iteratively denoise the image by sampling from the model's predicted update at each step. Below is the denoised image along with side-by-side comparisons with the original image, the Gaussian-denoised image, and the one-step denoised image..</p>
+    <p>Using Euler sampling, we can iteratively denoise the image by sampling from the model's predicted update at each step. Below is the denoised image along with side-by-side comparisons with the original image, the Gaussian-denoised image, and the one-step denoised image.</p>
     <div class="stack">
         <img src="media/part1-5-euler.png" alt="Euler sampling from t = 0.50 to t = 1.00">
         <img src="media/part1-5comparison.png" alt="Original, blur, one-step denoising, and Euler sampling">
@@ -146,7 +146,7 @@ v   = (v_1 + v_2) / 2</code></pre>
     <p>The equations used for generating hybrid images with diffusion models are:</p>
     <pre><code>v_1 = CFG velocity(x_t, t, p_1)
 v_2 = CFG velocity(x_t, t, p_2)
-v   = f(lowpass(v_1) + f_highpass(v_2))</code></pre>
+v   = lowpass(v_1) + highpass(v_2)</code></pre>
     <img src="media/waterfall-lithograph.png" alt="Close: a lithograph of a waterfall">
     <figcaption>Close: a lithograph of a waterfall (high frequency image)</figcaption>
     <img src="media/lithograph-skull.png" alt="Far: a lithograph of a skull">
@@ -159,11 +159,11 @@ v   = f(lowpass(v_1) + f_highpass(v_2))</code></pre>
     <h1>Part B</h1>
     <h2>Part 1: Training a Single-step Denoising UNet</h2>
     <h3>Part 1.1: Implementing the UNet</h3>
-    <p>UNets consist of an encoder which shrinks the image to a latent space (showing essential features) and a decoder which expands the latent space back to the image space. The encoder processes the image input wiht a ConvBlock, which downsamples the image into DownBlocks. Then a Flatten layer uses average pooling to compress the features to a 1x1. After that, an Unflatten layer uses transposed convolution to expand the features back up. Lastly, the decoder upsamples with UpBlocks. Fine details from the original image are preserved because the decoder gets concatenated with the corresponding encoder output. </p>
+    <p>UNets consist of an encoder which shrinks the image to a latent space (showing essential features) and a decoder which expands the latent space back to the image space. The encoder processes the image input with a ConvBlock, and DownBlocks downsample the image. Then a Flatten layer uses average pooling to compress the features to a 1x1. After that, an Unflatten layer uses transposed convolution to expand the features back up. Lastly, the decoder upsamples with UpBlocks. Fine details from the original image are preserved because the decoder gets concatenated with the corresponding encoder output. </p>
 
     <h3>Part 1.2: Using the UNet to Train a Denoiser</h3>
     <h3>Part 1.2.1: Training</h3>
-    <p>A UNet is a CNN for image-to-image tasks like denoising or generation. Below, we aim to clean up noisy images of digits with a UNET. A denoiser as a UNET takes a Gaussian blur to clean up images (removees high frequency grain), and the trained model uses the mean squared error loss between the output and the original image to predict what the clean digit should look like. With each batch, new noise was added so that the model learns to clean up a range of noise levels from each epoch.</p>
+    <p>A UNet is a CNN for image-to-image tasks like denoising or generation. Below, we aim to clean up noisy images of digits with a UNET. A denoiser as a UNET learns to remove noise, and the trained model uses the mean squared error loss between the output and the original image to predict what the clean digit should look like. With each batch, new noise was added so that the model learns to clean up noise at level sigma = 0.5.</p>
     <img src = "media/b-1-2-1-1.png" alt="Epoch 1: clean / noisy (sig=0.5) / denoised">
     <img src = "media/b-1-2-1.png" alt = "Epoch 5: clean / noisy (sig=0.5) / denoised">
     <img src = "media/b-1-2-1-loss.png" alt = "Training loss">
@@ -175,7 +175,7 @@ v   = f(lowpass(v_1) + f_highpass(v_2))</code></pre>
     <img src = "media/b-1-2-2-denoise.png" alt = "OOD denoised outputs, one row per sigma [0.0. 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]">
     
     <h3>Part 1.2.3: Denoising Pure Noise</h3>
-    <p>Below are the results from denoising pure noise to get a clean image x across 5 epochs as well as a loss plot. In the generated outputs, the results look very similar across epochs with a blurry image, kind of like a "8" or "9" digit. Epoch 5's outputs are slightly more defined than epoch 1's outputs (for example, the tail of the "9" seems less connected from the rounded part of the digit). Epoch 5 is slightly less blurry because when going from epoch to epoch, the model weights are continuously updated to get closer to the pixel-wise mean of the training set of handdrawn digits. The reason for the blurriness overall is because the model takes the average of the MNIST training images, especially at the beginning of training when model weights are randomly initialized. </p>
+    <p>Below are the results from denoising pure noise to get a clean image x across 5 epochs as well as a loss plot. In the generated outputs, the results look very similar across epochs with a blurry image, kind of like a "8" or "9" digit. Epoch 5's outputs are slightly more defined than epoch 1's outputs (for example, the tail of the "9" seems less connected from the rounded part of the digit). Epoch 5 is slightly less blurry because when going from epoch to epoch, the model weights are continuously updated to get closer to the pixel-wise mean of the training set of handdrawn digits. The reason for the blurriness overall is because the model takes the average of the MNIST training images, especially at the beginning of training when random noise has no information about digits. </p>
     <img src = "media/b-1-2-3-epoch1.png" alt = "Epoch 1: pure noise input / output">
     <img src = "media/b-1-2-3-epoch5.png" alt = "Epoch 5: pure noise input / output">
     <img src = "media/b-1-2-3-purenoise.png" alt = "Loss plot (optimizer step vs. mean squared error)">
@@ -191,18 +191,18 @@ v   = f(lowpass(v_1) + f_highpass(v_2))</code></pre>
     <h3>Part 2.3: Sampling from the Time-conditioned UNet</h3>
     <p>Below are the results from sampling the time-conditioned UNet across 10 epochs.</p>
     <img src = "media/timeunet-1.png" alt = "Time-conditioned UNET: epoch 1">
-    <img src = "media/timeunet-2.png" alt = "Time-conoditioned UNET: epoch 5">
+    <img src = "media/timeunet-2.png" alt = "Time-conditioned UNET: epoch 5">
     <img src = "media/timeunet-10.png" alt = "Time-conditioned UNET: epoch 10">
 
     <h3>Part 2.4: Implementing a Class-conditioned UNet</h3>
-    <p>One-hot vectors represent class labels, helping us separate and identify each digit from the MNIST dataset. To allow the UNET to understand the class of the input image, we convert each label (0 through 9) into a one-hot vector of length 10 (a list of numbers where it's all zeros except for the index of the digit, which is labeled as 1). This is fed into FCBlocks, where class multiples the features and time is added, letting the model change its output based on the class (the digit it should be) and time (how noisy the image is). </p>
+    <p>One-hot vectors represent class labels, helping us separate and identify each digit from the MNIST dataset. To allow the UNET to understand the class of the input image, we convert each label (0 through 9) into a one-hot vector of length 10 (a list of numbers where it's all zeros except for the index of the digit, which is labeled as 1). This is fed into FCBlocks, where class multiplies the features and time is added, letting the model change its output based on the class (the digit it should be) and time (how noisy the image is). </p>
     
     <h3>Part 2.5: Training the Class-conditioned UNet</h3>
     <p>To train the class-conditioned UNet, the process is comparable to the time-conditioned UNet, except the input is a one-hot conditioning vector c representing the class of the image. Each batch mixes the clean image with noise at a specific timestep t to get a noisy image x_t; then the model predicts the velocity with the mean squared error loss. Additionally, 10% of the time, the label was hidden so that the model learns to predict the velocity without the class information.</p>
     <img src = "media/class-conditioned-2.5.png" alt = "Loss plot (optimizer step vs. mean squared error)">
 
     <h3>Part 2.6: Sampling from the Class-conditioned UNet</h3>
-    <p>Below are the results from sampling the class-conditioned UNet across 5 epochs with a learning rate starting at 1e-2 and decaying as well as a constant learning rate of 1e-3.</p>
+    <p>Below are the results from sampling the class-conditioned UNet across 10 epochs with a learning rate starting at 1e-2 and decaying as well as a constant learning rate of 1e-3. To make up for removing the scheduler, we used the constant 1e-3 learning rate since it's the scheduler's final value.</p>
     <img src = "media/2-6-1.png" alt = "Class-conditioned UNET, epoch 1">
     <img src = "media/2-6-5.png" alt = "Class-conditioned UNET, epoch 5">
     <img src = "media/2-6-10.png" alt = "Class-conditioned UNET, epoch 10">
