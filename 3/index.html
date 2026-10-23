@@ -162,6 +162,9 @@ v   = lowpass(v_1) + highpass(v_2)</code></pre>
     <p>UNets consist of an encoder which shrinks the image to a latent space (showing essential features) and a decoder which expands the latent space back to the image space. The encoder processes the image input with a ConvBlock, and DownBlocks downsample the image. Then a Flatten layer uses average pooling to compress the features to a 1x1. After that, an Unflatten layer uses transposed convolution to expand the features back up. Lastly, the decoder upsamples with UpBlocks. Fine details from the original image are preserved because the decoder gets concatenated with the corresponding encoder output. </p>
 
     <h3>Part 1.2: Using the UNet to Train a Denoiser</h3>
+    <p>Below are the results from training the UNet to denoise images of digits with a noise level of sigma = [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0].</p>
+    <img src = "media/noising-process.png" alt = "Noising process, sigma = [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]">
+
     <h3>Part 1.2.1: Training</h3>
     <p>A UNet is a CNN for image-to-image tasks like denoising or generation. Below, we aim to clean up noisy images of digits with a UNET. A denoiser as a UNET learns to remove noise, and the trained model uses the mean squared error loss between the output and the original image to predict what the clean digit should look like. With each batch, new noise was added so that the model learns to clean up noise at level sigma = 0.5.</p>
     <img src = "media/b-1-2-1-1.png" alt="Epoch 1: clean / noisy (sig=0.5) / denoised">
@@ -171,8 +174,8 @@ v   = lowpass(v_1) + highpass(v_2)</code></pre>
     
     <h3>Part 1.2.2: Out-of-Distribution Testing</h3>
     <p>With the denoiser we trained above, now we can test and visualize its results on different noise levels (sigmas) from 0.0 to 1.0.</p>
-    <img src = "media/b-1-2-2.png" alt = "OOD noisy inputs, one row per sigma [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]">
-    <img src = "media/b-1-2-2-denoise.png" alt = "OOD denoised outputs, one row per sigma [0.0. 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]">
+    <img src = "media/ooo-noisy-inputs.png" alt = "OOD noisy inputs, one row per sigma [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]">
+    <img src = "media/ood-denoised-inputs.png" alt = "OOD denoised outputs, one row per sigma [0.0. 0.2, 0.4, 0.5, 0.6, 0.8, 1.0]">
     
     <h3>Part 1.2.3: Denoising Pure Noise</h3>
     <p>Below are the results from denoising pure noise to get a clean image x across 5 epochs as well as a loss plot. In the generated outputs, the results look very similar across epochs with a blurry image, kind of like a "8" or "9" digit. Epoch 5's outputs are slightly more defined than epoch 1's outputs (for example, the tail of the "9" seems less connected from the rounded part of the digit). Epoch 5 is slightly less blurry because when going from epoch to epoch, the model weights are continuously updated to get closer to the pixel-wise mean of the training set of handdrawn digits. The reason for the blurriness overall is because the model takes the average of the MNIST training images, especially at the beginning of training when random noise has no information about digits. </p>
@@ -200,6 +203,7 @@ v   = lowpass(v_1) + highpass(v_2)</code></pre>
     <h3>Part 2.5: Training the Class-conditioned UNet</h3>
     <p>To train the class-conditioned UNet, the process is comparable to the time-conditioned UNet, except the input is a one-hot conditioning vector c representing the class of the image. Each batch mixes the clean image with noise at a specific timestep t to get a noisy image x_t; then the model predicts the velocity with the mean squared error loss. Additionally, 10% of the time, the label was hidden so that the model learns to predict the velocity without the class information.</p>
     <img src = "media/class-conditioned-2.5.png" alt = "Loss plot (optimizer step vs. mean squared error)">
+    <img src = "media/no-sched.png" alt = "No scheduler loss plot (optimizer step vs mean squared error)">
 
     <h3>Part 2.6: Sampling from the Class-conditioned UNet</h3>
     <p>Below are the results from sampling the class-conditioned UNet across 10 epochs with a learning rate starting at 1e-2 and decaying as well as a constant learning rate of 1e-3. To make up for removing the scheduler, we used the constant 1e-3 learning rate since it's the scheduler's final value.</p>
