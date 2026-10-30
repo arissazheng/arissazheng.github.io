@@ -17,10 +17,14 @@
             font-size: 4rem;
             margin-bottom: 0.1rem;
         }
+        h1.part-header {
+            font-size: 3rem;
+        }
         h2,
         h3,
         figcaption,
         p,
+        li,
         a {
             font-family: 'Josefin Sans', sans-serif;
         }
@@ -52,12 +56,39 @@
             height: auto;
             margin: 0;
         }
+        img.corr {
+            width: 900px;
+            max-width: 100%;
+            height: auto;
+        }
+        .corr-pair {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .corr-pair figure {
+            margin: 0;
+            flex: 1 1 0;
+            min-width: 0;
+        }
+        .corr-pair img.corr {
+            width: 100%;
+        }
+        .corr-pair.mosaic-set > figure {
+            flex: 0 0 auto;
+        }
+        .corr-pair.mosaic-set > figure:first-child {
+            width: 460px;
+        }
+        .corr-pair.mosaic-set > figure.narrow {
+            width: 260px;
+        }
     </style>
 </head>
 <body>
     <a class="home-link" href="../index.html"><img src="../home-media/az-initials.gif" alt="Back to home"></a>
     <h1>Project 4: (Auto) Stitching and Photo Mosaics</h1>
-    <h1>Part A: Image Warping and Mosaicing</h1>
+    <h1 class="part-header">Part A: Image Warping and Mosaicing</h1>
     <h2>A.1: Shoot the Pictures</h2>
     <h3>Projective Transformations of Gateway</h3>
     <div class="row">
@@ -94,5 +125,159 @@
         <img src="./media/doe15.jpeg" alt="Doe Library 15">
         <img src="./media/doe16.jpeg" alt="Doe Library 16">
     </div>
+
+    <h2>A.2: Recover Homographies</h2>
+    <p>
+        Homographies are used to map points between images. This is accomplished with a 3x3 matrix that maps a point in one image (x, y), to its corresponding point in another image (x', y'). 
+        The bottom two equations are used to solve for the (x', y') values.
+    </p>
+    <pre>
+    [x  y  1  0  0  0  -x*x'  -y*x'] h = x'
+    [0  0  0  x  y  1  -x*y'  -y*y'] h = y'
+    </pre>
+    <p>
+        After getting the (x', y') values, the homography matrix is solved for by stacking the rows for all points gives a system Ah = b. After that, I selected 7-10 points in each image pair that correspond to each other.
+    </p>
+    
+    <h3>Middle of Doe Library</h3>
+    <img class="corr" src="./doe7_doe8_corr.png" alt="doe7 to doe8 correspondences">
+    <p> The blue dots are the manually clicked points, and the red x's are the other image's points mapped through the homography matrix.
+      </p>
+    
+    <p>First 4 rows of the system</p>
+    <pre>
+    [657.1  238.7  1    0      0     0   -311320.5  -113096.2] h = 473.8
+    [  0      0    0  657.1  238.7   1   -157661.8   -57275.2] h = 239.9
+    [344.5  496.8  1    0      0     0    -48924.6   -70565.2] h = 142.0
+    [  0      0    0  344.5  496.8   1   -164373.2  -237079.9] h = 477.2
+    ...
+    </pre>
+    
+    <p>Recovered H:</p>
+    <pre>
+    [[ 1.3389     0.0117    -306.50 ]
+     [ 0.2315     1.2291    -153.88 ]
+     [ 0.000317   0.000031     1    ]]
+    </pre>
+    <p>Mean reprojection error: 2.1 px.</p>
+    
+    <h3>Other pairs</h3>
+    <div class="corr-pair">
+        <figure>
+            <figcaption>Doe Library Middle Left (mean error 1.9 px)</figcaption>
+            <img class="corr" src="./doe6_doe8_corr.png" alt="doe6 to doe8 correspondences">
+        </figure>
+        <figure>
+            <figcaption>Doe Library Middle Right (mean error 2.9 px)</figcaption>
+            <img class="corr" src="./doe10_doe8_corr.png" alt="doe10 to doe8 correspondences">
+        </figure>
+    </div>
+    <div class="corr-pair">
+        <figure>
+            <figcaption>Gateway Center (mean error 2.0 px)</figcaption>
+            <img class="corr" src="./gateway5_gateway7_corr.png" alt="gateway5 to gateway7 correspondences">
+        </figure>
+        <figure>
+            <figcaption>Doe Library Right Side (mean error 2.0 px)</figcaption>
+            <img class="corr" src="./doe11_doe13_corr.png" alt="doe11 to doe13 correspondences">
+        </figure>
+    </div>
+
+    <h2>A.3: Warp the Images</h2>
+    <p>
+        Image warping means transforming one image to another image's perspective using homography.
+        Interpolation is the process of estimating a color value between two pixels. When warping an 
+        image, the output pixel is the result of interpolation of the input pixels. This can be accomplished
+        using nearest neighbor or bilinear interpolation For nearest neighbor interpolation,
+        you round the coordinates to the nearest pixel value (closest integer for the x and y coordinates).
+        For bilinear interpoation, you take a weighted average of the 4 surrounding pixels, weighted by their distance to the output pixel.
+        In the below examples, we tried bilinear and nearest neighbor interpolation on The Portrait of Madame X and two of Monet's water lilies. The photos
+        of the paintings were taken at an angle, and after clicking on the top left, top right, bottom left, and bottom right
+        corners of each painting, we were able to warp the images to a rectangle with a straight on perspective.
+        The color quality when transferred from the original image to the warped images is quite similar, although the bilinear interpolation results are a bit blurrier.
+        However, the bilinear interpolation was a bit slower than the nearest neighbor interpolation. Both methods did not do super well at 
+        preserving the original width of the paintings. The Portrait of Madame X is a bit less wide than the original painting, and the Monet paintings are much wider than their original paintings.
+    </p>
+    
+    <div class="corr-pair">
+        <figure>
+            <figcaption>The Portrait of Madame X by John Singer Sargent</figcaption>
+            <img class="corr" src="./madamex_rectified.png" alt="Madame X rectification">
+        </figure>
+        <figure>
+            <figcaption>Monet Water Lilies</figcaption>
+            <img class="corr" src="./monet_rectified.png" alt="Monet rectification">
+        </figure>
+    </div>
+
+    <h2>A.4: Blend the Images into a Mosaic</h2>
+<p>
+    Mosaics consist of multiple images stitched together to create a larger image. For the Mosaics
+    below, I kept the middle photo unwarped and warped the photos to their left and right using
+    homographies from A.2 and bilinear interpolation from A.3. To determine the size of the final mosaic,
+    I mapped the corners of every warped image into the middle image's coordinate system.
+    
+</p>
+<p>
+    Weighted averaging / feathering is used to blend the images together. Each photo has a weight map 
+    that ranges from 1 at the center to 0 at the edges. The weight map is warped with each image so that
+    wherever two images overlap, the output pixel is the weighted average of the two images. Thus, any 
+    differences in brightness are blended together. For example, in the first Mosaic below, in the no 
+    blending version, the rightside image has a slightly dark left edge that is visible, which
+    the weight map removes. Another failure mode is that the weight map can cause ghosting since 
+    some people in the scene slightly moved between the photos.
+</p>
+<pre>
+mosaic = sum(weight_i * image_i) / sum(weight_i)
+</pre>
+
+
+<h3>Mosaic 1: Doe Library Center Shot</h3>
+<div class="corr-pair mosaic-set">
+    <figure>
+        <figcaption>Original pictures</figcaption>
+        <img class="corr" src="./sources_doe8_doe6_doe10.png" alt="Doe center source images">
+    </figure>
+    <figure class="narrow">
+        <figcaption>Mosaic</figcaption>
+        <img class="corr" src="./mosaic_doe8_doe6_doe10.png" alt="Doe center mosaic">
+    </figure>
+    <figure class="narrow">
+        <figcaption>No blending vs. feathered</figcaption>
+        <img class="corr" src="./compare_doe8_doe6_doe10.png" alt="Doe center blending comparison">
+    </figure>
+</div>
+
+<h3>Mosaic 2: Gateway</h3>
+<div class="corr-pair mosaic-set">
+    <figure>
+        <figcaption>Original pictures</figcaption>
+        <img class="corr" src="./sources_gateway7_gateway5.png" alt="Gateway source images">
+    </figure>
+    <figure class="narrow">
+        <figcaption>Mosaic</figcaption>
+        <img class="corr" src="./mosaic_gateway7_gateway5.png" alt="Gateway mosaic">
+    </figure>
+    <figure class="narrow">
+        <figcaption>No blending vs. feathered</figcaption>
+        <img class="corr" src="./compare_gateway7_gateway5.png" alt="Gateway blending comparison">
+    </figure>
+</div>
+
+<h3>Mosaic 3: Doe Library Right Side</h3>
+<div class="corr-pair mosaic-set">
+    <figure>
+        <figcaption>Original pictures</figcaption>
+        <img class="corr" src="./sources_doe13_doe11.png" alt="Doe right wall source images">
+    </figure>
+    <figure class="narrow">
+        <figcaption>Mosaic</figcaption>
+        <img class="corr" src="./mosaic_doe13_doe11.png" alt="Doe right wall mosaic">
+    </figure>
+    <figure class="narrow">
+        <figcaption>No blending vs. feathered</figcaption>
+        <img class="corr" src="./compare_doe13_doe11.png" alt="Doe right wall blending comparison">
+    </figure>
+</div>
 </body>
 </html>
