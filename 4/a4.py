@@ -22,10 +22,14 @@ def mosaic(center, others):
     ymax=y0 + o0.shape[0]
     for o, (ox, oy) in warped:
         for x, y in ((ox, oy), (ox + o.shape[1], oy + o.shape[0])):
-            if x < xmin: xmin = x
-            if y < ymin: ymin = y
-            if x > xmax: xmax = x
-            if y > ymax: ymax = y
+            if x < xmin: 
+                xmin = x
+            if y < ymin: 
+                ymin = y
+            if x > xmax: 
+                xmax = x
+            if y > ymax: 
+                ymax = y
     color = np.zeros((ymax - ymin, xmax - xmin, 3))
     total = np.zeros((ymax - ymin, xmax - xmin))
     overwrite = np.zeros((ymax - ymin, xmax - xmin, 4))
@@ -39,16 +43,16 @@ def mosaic(center, others):
     result = np.dstack([color / np.maximum(total, 1e-8)[..., None], total > 0])
 
     name = "_".join(names)
-    plt.imsave(f"4/mosaic_{name}.png", np.clip(result, 0, 1))
+    plt.imsave(f"4/media/mosaic_{name}.png", np.clip(result, 0, 1))
     fig, ax = plt.subplots(1, len(imgs), figsize=(5 * len(imgs), 6))
     for a, im, n in zip(ax, imgs, names):
         a.imshow(im); a.set_title(n); a.axis("off")
-    plt.savefig(f"4/sources_{name}.png", dpi=120, bbox_inches="tight")
+    plt.savefig(f"4/media/sources_{name}.png", dpi=120, bbox_inches="tight")
     fig, ax = plt.subplots(2, 1, figsize=(14, 14))
     ax[0].imshow(np.clip(overwrite, 0, 1)); ax[0].set_title("no blending (later image overwrites)")
     ax[1].imshow(np.clip(result, 0, 1)); ax[1].set_title("weighted averaging (feathered)")
     for a in ax: a.axis("off")
-    plt.savefig(f"4/compare_{name}.png", dpi=120, bbox_inches="tight")
+    plt.savefig(f"4/media/compare_{name}.png", dpi=120, bbox_inches="tight")
     plt.show()
 
 mosaic("doe8", ["doe6", "doe10"])

@@ -4,9 +4,8 @@ import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
 import glob 
 
-
 def load(name, width=1000):
-    path = glob.glob(f"4/media/{name}.*")[0]      # finds name.jpeg, name.JPG, name.jpg...
+    path = glob.glob(f"4/media/{name}.*")[0]    
     im = ImageOps.exif_transpose(Image.open(path))
     im = im.resize((width, round(im.height * width / im.width)))
     return np.asarray(im) / 255.0
@@ -74,7 +73,7 @@ def rectify(name, W, Hh):
                              ["original", f"nearest ({t_nn:.2f}s)", f"bilinear ({t_bil:.2f}s)", "nearest (zoom)", "bilinear (zoom)"]):
         a.imshow(img); a.set_title(title); a.axis("off")
     ax[0].plot(*np.vstack([corners, corners[:1]]).T, "r-")
-    plt.savefig(f"4/{name}_rectified.png", dpi=150, bbox_inches="tight")
+    plt.savefig(f"4/media/{name}_rectified.png", dpi=150, bbox_inches="tight")
     plt.show()
 
 rectify("madamex", W=200, Hh=428)
